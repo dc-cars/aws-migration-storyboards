@@ -1,0 +1,131 @@
+= Background =
+
+
+Role: Replicated databases
+Kernel: 2.6.18-416.el5 #1 SMP
+Architecture: x86_64
+Contains: mysqld_multi, /etc/init.d/mysqld is run via /etc/rc.local since not a real service
+
+VmWare:
+- CPU: 4
+- RAM: 32
+- Disks: 3
+ * boot: 104 MB
+ * root: 66.9 GB
+ * fio: 600 GB
+
+SMS migration time:
+ - 5hr50min (estimate)
+
+AWS EC2 Instance:
+- type: r4.xlarge (4 cpu, 32 ram)
+- ENA: no (RHEL5 too old)
+
+
+== Storyboard: Create clone of VmWare instance ==
+
+[ ] Login to VmWare console
+
+[ ] Navigate to ncspral23
+
+[ ] SSH into the ncspral23
+{{{
+sudo /sbin/shutdown -h now
+}}}
+
+[ ] Stop ncspral23 VmWare instance
+
+[ ] Clone ncspral23 VmWare instance to ncspral23-aws-clone
+  - place it in Cars-SM/AWS migration
+  - Use Newcars Hosts
+  - Use data store with sufficient amount of disk
+
+[ ] Wait for clone task to complete and power up original vm
+
+[ ] Start ncspral23 vm (non clone)
+
+[ ] Check ncspral23 vm for correct running services (mysql)
+
+[ ] Disable all NIC interfaces on VmWare ncspral23-aws-clone instance
+
+[ ] Start up ncspral23-aws-clone VmWare instance
+
+[ ] Login to ncspral23 via VmWare KVM console
+
+
+== Storyboard: Disable services ==
+
+Note: done so two running clone do mess with the infrastructure
+
+[ ] Disable anacron service
+{{{
+sudo /sbin/chkconfig --list anacron
+sudo /sbin/chkconfig --level 245 anacron off
+sudo /sbin/chkconfig --list anacron | grep ":on"
+}}}
+
+[ ] Disable atd service
+{{{
+sudo /sbin/chkconfig --list atd
+sudo /sbin/chkconfig --level 45 atd off
+sudo /sbin/chkconfig --list atd | grep ":on"
+}}}
+
+[ ] Disable crond service
+{{{
+sudo /sbin/chkconfig --list crond
+sudo /sbin/chkconfig --level 2345 crond off
+sudo /sbin/chkconfig --list crond | grep ":on"
+}}}
+
+[ ] Disable mysql service
+{{{
+sudo emacs /etc/rc.local
+}}}
+
+comment out
+{{{
+/etc/init.d/mysqld start
+}}}
+
+[ ] Disable Netbackup client service
+{{{
+sudo /sbin/chkconfig --list nbclient
+sudo /sbin/chkconfig --level 235 nbclient off
+sudo /sbin/chkconfig --list nbclient | grep ":on"
+}}}
+
+[ ] Disable Nagios NRPE client service
+{{{
+sudo /sbin/chkconfig --list nrpe
+sudo /sbin/chkconfig --level 345 nrpe off
+sudo /sbin/chkconfig --list nrpe | grep ":on"
+}}}
+
+[ ] Disable sendmail service
+{{{
+sudo /sbin/chkconfig --list sendmail
+sudo /sbin/chkconfig --level 2345 sendmail off
+sudo /sbin/chkconfig --list sendmail | grep ":on"
+}}}
+
+[ ] Restart server
+{{{
+sudo /sbin/reboot
+}}}
+
+[ ] Run spot checks post reboot
+{{{
+ps auxw | grep anacron
+ps auxw | grep atd
+ps auxw | grep crond
+ps auxw | grep mysql
+ps auxw | grep nbclient
+ps auxw | grep nrpe
+ps auxw | grep sendmail
+}}}
+
+[ ] Shutdown the clone machine
+{{{
+sudo /sbin/shutdown -h now
+}}}
