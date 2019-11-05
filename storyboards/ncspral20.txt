@@ -200,6 +200,7 @@ Then wait for 5-15 min for AMI to copy, you will need to refresh the screen
 [ ] Name the newly copied AMI
 {{{
 Name: ncspral20
+Description: ncspral20
 }}}
 
 [ ] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the newly copied AMI

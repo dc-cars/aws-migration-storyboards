@@ -45,12 +45,21 @@ sudo /sbin/shutdown -h now
 [ ] Start ncspral23 vm (non clone)
 
 [ ] Check ncspral23 vm for correct running services (mysql)
+{{{
+ps auxw | grep anacron
+ps auxw | grep atd
+ps auxw | grep crond
+ps auxw | grep mysql
+ps auxw | grep nbclient
+ps auxw | grep nrpe
+ps auxw | grep sendmail
+}}}
 
 [ ] Disable all NIC interfaces on VmWare ncspral23-aws-clone instance
 
 [ ] Start up ncspral23-aws-clone VmWare instance
 
-[ ] Login to ncspral23 via VmWare KVM console
+[ ] Login to ncspral23-aws-clone via VmWare KVM console
 
 
 == Storyboard: Disable services ==
@@ -129,3 +138,214 @@ ps auxw | grep sendmail
 {{{
 sudo /sbin/shutdown -h now
 }}}
+
+== Storyboard: Migrate VmWare VM to AWS AMI using SMS ==
+
+[ ] Login in to AWS console
+
+[ ] Navigate to "Server Migration Service"
+
+[ ] Click on "Servers" sidebar section
+
+[ ] Click "Re-import server catalog" button
+
+[ ] Search for "ncspral23-aws-clone", select it and click "Create Replication Job" button
+
+[ ] on "Step 1: Select the servers" click "Next" button
+
+[ ] on "Step 2: Configure server-specific settings" click Next
+
+[ ] on "Step 3: Configure replication job settings" enter/select following in the fields
+{{{
+One-time migration
+Description: ncspral23-aws-clone
+}}}
+click "Next" button
+
+[ ] on "Step 4: Review" verify all the configuration and click "Create" button
+
+[ ] on "Creation status" click "View replication jobs"
+
+[ ] Wait around of time mentioned in "SMS Migration time" section
+
+
+== Storyboard: Copy migrated AMI to new AMI ==
+
+Note: so it can be named better
+
+[ ] Navigate to AWS EC2 AMI and name the migrated AMI to
+{{{
+ncspral23-aws-clone
+}}}
+
+[ ] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the migrated AMI
+{{{
+1GB:   ncspral23-aws-clone-boot
+67GB:  ncspral23-aws-clone-root
+601GB: ncspral23-aws-clone-fio
+}}}
+
+[ ] Navigate to AWS EC2 AMI and copy ncspral23-aws-clone AMI enter/select following values into the field
+{{{
+Destination region: US East (North Virginia)
+Name: ncspral23
+Description: ncspral23
+}}}
+and click "Copy AMI"
+
+Then wait for 5-15 min for AMI to copy, you will need to refresh the screen
+
+[ ] Name the newly copied AMI
+{{{
+Name: ncspral23
+Description: ncspral23
+}}}
+
+[ ] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the newly copied AMI
+{{{
+1GB:   ncspral23-ami-boot
+67GB:  ncspral23-ami-root
+601GB: ncspral23-ami-fio
+}}}
+
+[ ] Navigate to AWS EC2 AMI and "Deregister" (delete) the "ncspral23-aws-clone" AMI
+
+[ ] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral23-aws-clone-*
+
+
+== Storyboad: Create AWS EC2 Instance ==
+
+[ ] Navigate to AWS EC2 Instances and click "Launch Instance"
+
+[ ] On "Step 1: Choose an Amazon Machine Image (AMI)" step click "My AMIs" then select "ncspral23" AMI and click "Select"
+
+[ ] On "Step 2: Choose an Instance Type" select "r4.xlarge" and click "Next: Configure Instance Details"
+
+[ ] On "Step 3: Configure Instance Details" select/enter following and click "Next: Add Storage"
+
+todo: vpc, subnet, network interface ip settings will change for prod account
+
+{{{
+Number of instances: 1
+Network: vpc-0003f0f3f28282042 | NewCars-NP-East
+Subnet: subnet-0baf34a170551fefb | Cars.com-Newcars-NP web | us-east-1a
+Auto-assign Public IP: Use subnet setting (Disable)
+Placement group: ??? (need to ask adam)
+CPU options: ??? (need to ask adam)
+Enable termination protection: Protect against accidental termination
+Tenancy: ??? (need to ask adam)
+}}}
+
+Network interfaces:
+{{{
+Primary IP: 172.28.224.53
+}}}
+
+[ ] On "Step 4: Add Storage" select the following and click "Next: Add Tags"
+{{{
+Root Volume Type: ??? (talk to Adam) [this is actuall boot drive]
+EBS Volume Type:  ??? (talk to Adam) [this is actually root drive]
+EBS Volume Type:  ??? (talk to Adam) [this is actually fio drive with data]
+
+Root Volume Type: Delete on termination, checked
+EBS Volume Type:  Delete on termination, checked
+EBS Volume Type:  Delete on termination, checked
+}}}
+
+[ ] On "Step 5: Add Tags" and add following tags and click "next: Configure Security Group"
+{{{
+Key: Name
+Value: ncspral23
+Instances: checked
+Volumes: checked
+}}}
+
+[ ] On "Step 6: Configure Security Group" click "Select an existing security group" and click "Review and Launch"
+TODO: need additional groups that allow access to multiple mysql ports on this machine
+{{{
+Cars-SM Default
+}}}
+
+[ ] On "Step 7: Review Instance Launch" review all the settings and click "Launch"
+
+
+[] On "Select an existing key pair or create a new key pair" popup select "Proceed without a key pair", check the "acknowledge..." checkbox and click "Launch Instances"
+
+[ ] Navigatew to AWS EC2 Network interfaces and Name the network interface for the new Instance
+{{{
+ncspral23
+}}}
+
+== Storyboard: Post first launch checks ==
+
+[ ]
+{{{
+ssh \
+  -o UserKnownHostsFile=/dev/null \
+  -o StrictHostKeyChecking=no \
+  -o LogLevel=ERROR \
+  mryabushkin@172.28.224.53 \
+;
+}}}
+
+[ ] Run spot checks post reboot
+{{{
+ps auxw | grep anacron
+ps auxw | grep atd
+ps auxw | grep crond
+ps auxw | grep mysql
+ps auxw | grep nbclient
+ps auxw | grep nrpe
+ps auxw | grep sendmail
+}}}
+
+
+
+== Storyboard: Updated machine networking ==
+
+[ ] Force hostname for new Instance
+{{{
+sudo nano -w /etc/sysconfig/network
+}}}
+append
+{{{
+HOSTNAME=ncspral23.classifiedventures.com
+}}}
+
+
+[ ] Update /etc/hosts to new IP
+{{{
+sudo nano -w /etc/hosts
+}}}
+comment out old ip
+{{{
+#172.20.89.53           ncspral23.classifiedventures.com ncspral23
+}}}
+add new ip
+{{{
+172.28.224.53           ncspral23.classifiedventures.com ncspral23
+}}}
+
+TODO: more greps for IP
+
+
+[ ] Reboot the machine
+{{{
+sudo /sbin/reboot
+}}}
+
+[ ] Check System Log for errors
+
+
+== Storyboard: Assign Security groups ==
+
+[ ] TODO: ncspral23 group
+
+
+== Storyboard: Delete VmWare clone ==
+
+[ ] Login to VmWare console
+
+[ ] Navigate to ncspral23-aws-clone
+
+[ ] Delete from disk ncspral23-aws-clone

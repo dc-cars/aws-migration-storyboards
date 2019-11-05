@@ -50,7 +50,7 @@ sudo /sbin/shutdown -h now
 
 [ ] Start up ncspral24-aws-clone VmWare instance
 
-[ ] Login to ncspral24 via VmWare KVM console
+[ ] Login to ncspral24-aws-clone via VmWare KVM console
 
 
 == Storyboard: Disable services ==
@@ -135,9 +135,9 @@ sudo /sbin/shutdown -h now
 
 [ ] Login in to AWS console
 
-[ ] Navigate to "SMS Service"
+[ ] Navigate to "Server Migration Service"
 
-[ ] Click on "Server migration" sidebar section
+[ ] Click on "Servers" sidebar section
 
 [ ] Click "Re-import server catalog" button
 
@@ -190,6 +190,7 @@ Then wait for 5-15 min for AMI to copy, you will need to refresh the screen
 [ ] Name the newly copied AMI
 {{{
 Name: ncspral24
+Description: ncspral24
 }}}
 
 [ ] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the newly copied AMI
