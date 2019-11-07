@@ -12,7 +12,8 @@ VmWare:
 - CPU: 4
 - RAM: 32
 - Disks: 3
- * boot: 1.2 MB
+ * boot + swap: 1.2 GB
+    * swap: 1.05 GB
  * root: 67.2 GB
  * fio: 280 GB
 
@@ -20,7 +21,7 @@ SMS migration time:
  - 3hr (estimate)
 
 AWS EC2 Instance:
-- type: r4.xlarge (4 cpu, 32 ram)
+- type: r4.xlarge (4 cpu, 32 ram [+1 GB for swap])
 - ENA: no (RHEL5 too old)
 
 
@@ -62,6 +63,11 @@ ps auxw | grep univiewerMS
 [ ] Start up ncspral18-aws-clone VmWare instance
 
 [ ] Login to ncspral18-aws-clone via VmWare KVM console
+
+
+== Storyboard: Remove Swap ==
+
+[ ] TODO: remove swap
 
 
 == Storyboard: Disable services ==
@@ -135,12 +141,12 @@ sudo /sbin/reboot
 [ ] Run spot checks post reboot
 {{{
 ps auxw | grep anacron
-ps auxw | grep atd
 ps auxw | grep crond
 ps auxw | grep mysql
-ps auxw | grep nbclient
 ps auxw | grep nrpe
 ps auxw | grep sendmail
+ps auxw | grep unijob
+ps auxw | grep univiewerMS
 }}}
 
 [ ] Shutdown the clone machine
@@ -220,6 +226,10 @@ Description: ncspral18
 [ ] Navigate to AWS EC2 AMI and "Deregister" (delete) the "ncspral18-aws-clone" AMI
 
 [ ] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral18-aws-clone-*
+
+
+== Storyboard: Add security groups ==
+ [ ] TODO
 
 
 == Storyboad: Create AWS EC2 Instance ==
@@ -357,3 +367,25 @@ sudo /sbin/reboot
 [ ] Navigate to ncspral18-aws-clone
 
 [ ] Delete from disk ncspral18-aws-clone
+
+
+== Storyboard: Re-activate services ==
+
+[ ] TODO: activate services deactivated previously
+
+
+== Storyboard: BigIP Updates ==
+
+[ ] TODO: Update BigIP configs
+
+
+== Storyboard: DNS Updates ==
+
+[ ] update DNS record for ncspral18.srv.nchub.net to 172.28.224.44
+
+[ ] TODO: Update DNS for server
+
+
+== Storyboard: Host File Updates ==
+
+[ ] TODO: Modify host files that refer to the server
