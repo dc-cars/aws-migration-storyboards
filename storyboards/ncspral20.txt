@@ -9,7 +9,8 @@ VmWare:
 - CPU: 8
 - RAM: 64
 - Disks: 4
- * boot+swap: 8 GB
+ * boot+swap: 8.5 GB
+    * swap 8.4GB
  * root: 59 GB
  * fio: 300 GB
  * cars-data: 500 GB
@@ -18,7 +19,7 @@ SMS migration time:
  - 6hr15min
 
 AWS EC2 Instance:
-- type: r4.2xlarge (8 cpu, 64 ram) ???
+- type: r4.2xlarge or r4.4xlarge (8 cpu, 64 ram [+8.4GB for swap]) ???
 - ENA: no (RHEL5 too old)
 
 
@@ -51,6 +52,11 @@ sudo /sbin/shutdown -h now
 [ ] Start up ncspral20-aws-clone VmWare instance
 
 [ ] Login to ncspral20 via VmWare KVM console
+
+
+== Storyboard: Remove Swap ==
+
+[ ] TODO: remove swap
 
 
 == Storyboard: Disable services ==
@@ -216,6 +222,10 @@ Description: ncspral20
 [ ] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral20-aws-clone-*
 
 
+== Storyboard: Add security groups ==
+ [ ] TODO
+
+
 == Storyboad: Create AWS EC2 Instance ==
 
 [ ] Navigate to AWS EC2 Instances and click "Launch Instance"
@@ -357,3 +367,25 @@ sudo /sbin/reboot
 [ ] Navigate to ncspral20-aws-clone
 
 [ ] Delete from disk ncspral20-aws-clone
+
+
+== Storyboard: Re-activate services ==
+
+[ ] TODO: activate services deactivated previously
+
+
+== Storyboard: BigIP Updates ==
+
+[ ] TODO: Update BigIP configs
+
+
+== Storyboard: DNS Updates ==
+
+[ ] update DNS record for ncspral18.srv.nchub.net to 172.28.224.44
+
+[ ] TODO: Update DNS for server
+
+
+== Storyboard: Host File Updates ==
+
+[ ] TODO: Modify host files that refer to the server
