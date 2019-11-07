@@ -50,12 +50,12 @@ sudo /sbin/shutdown -h now
 [ ] Check ncspral18 vm for correct running services (mysql)
 {{{
 ps auxw | grep anacron
+ps auxw | grep CentralServer
 ps auxw | grep crond
 ps auxw | grep mysql
 ps auxw | grep nrpe
 ps auxw | grep sendmail
-ps auxw | grep unijob
-ps auxw | grep univiewerMS
+ps auxw | grep -i unijob
 }}}
 
 [ ] Disable all NIC interfaces on VmWare ncspral18-aws-clone instance
@@ -65,9 +65,55 @@ ps auxw | grep univiewerMS
 [ ] Login to ncspral18-aws-clone via VmWare KVM console
 
 
-== Storyboard: Remove Swap ==
+== Storyboard: Disable nbclient service ==
 
-[ ] TODO: remove swap
+NOTE: This step is needed because ncspral18 hangs when attempting to start
+nbclient service at runlevel 2
+
+[ ] Boot into GRUB
+  * press ESC on the red intro screen
+
+[ ] Modify one time grub config to boot into single user mode
+  * Press e on Redhat Enterprise...
+  * Press down arrow to highlight kernel ...
+  * Press e
+  * Replace the word `quiet` and the end of the string with `single`
+
+[ ] Press b to boot into the system
+
+[ ] Disable nbclient service
+{{{
+sudo /sbin/chkconfig --list nbclient
+sudo /sbin/chkconfig --level 235 nbclient off
+sudo /sbin/chkconfig --list nbclient | grep ":on"
+}}}
+
+[ ] Reboot the server
+{{{
+sudo /sbin/reboot
+}}}
+
+== Storyboard: Disable Swap Mount on Boot ==
+
+[ ] Check that swap is currently on
+{{{
+/sbin/swapon -s
+}}}
+
+[ ] Comment out swap mount statement line from `/etc/fstab`
+{{{
+LABEL=SWAP-sda2         swap            swap            defaults                0 0
+}}}
+
+[ ] Reboot server
+{{{
+sudo /sbin/reboot
+}}}
+
+[ ] Check that there is no swap. The output of this command should be empty
+{{{
+swapon -s
+}}}
 
 
 == Storyboard: Disable services ==
@@ -141,12 +187,12 @@ sudo /sbin/reboot
 [ ] Run spot checks post reboot
 {{{
 ps auxw | grep anacron
+ps auxw | grep CentralServer
 ps auxw | grep crond
 ps auxw | grep mysql
 ps auxw | grep nrpe
 ps auxw | grep sendmail
-ps auxw | grep unijob
-ps auxw | grep univiewerMS
+ps auxw | grep -i unijob
 }}}
 
 [ ] Shutdown the clone machine
@@ -310,12 +356,12 @@ ssh \
 [ ] Run spot checks post reboot
 {{{
 ps auxw | grep anacron
+ps auxw | grep CentralServer
 ps auxw | grep crond
 ps auxw | grep mysql
 ps auxw | grep nrpe
 ps auxw | grep sendmail
-ps auxw | grep unijob
-ps auxw | grep univiewerMS
+ps auxw | grep -i unijob
 }}}
 
 
@@ -389,3 +435,7 @@ sudo /sbin/reboot
 == Storyboard: Host File Updates ==
 
 [ ] TODO: Modify host files that refer to the server
+
+
+== Storyboard: Verify Unijob Server Health ==
+TODO
