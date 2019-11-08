@@ -74,8 +74,8 @@ nbclient service at runlevel 2
   * press ESC on the red intro screen
 
 [ ] Modify one time grub config to boot into single user mode
-  * Press e on Redhat Enterprise...
-  * Press down arrow to highlight kernel ...
+  * Press e on `Red Hat Enterprise Linux Server (2.6.18-416.e15)`
+  * Press down arrow to highlight `kernel /vmlinuz-2.6.18-416.e15 ro root=/dev/vg00/lv01 rhbg quiet`
   * Press e
   * Replace the word `quiet` and the end of the string with `single`
 
@@ -123,7 +123,7 @@ Note: done so two running clone do mess with the infrastructure
 [ ] Disable anacron service
 {{{
 sudo /sbin/chkconfig --list anacron
-sudo /sbin/chkconfig --level 245 anacron off
+sudo /sbin/chkconfig --level 2345 anacron off
 sudo /sbin/chkconfig --list anacron | grep ":on"
 }}}
 
@@ -148,7 +148,7 @@ sudo emacs /etc/rc.local
 
 comment out
 {{{
-/etc/init.d/mysqld start
+/usr/local/mysql/bin/mysqld_safe --defaults-file=/usr/local/mysql/my_newcpc.cnf &
 }}}
 
 [ ] Disable Nagios NRPE client service
