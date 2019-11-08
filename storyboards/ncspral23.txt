@@ -16,7 +16,7 @@ VmWare:
  * fio: 600 GB
 
 SMS migration time:
- - 5hr50min (estimate)
+ - 5hr20min (estimate)
 
 AWS EC2 Instance:
 - type: r4.xlarge or r4.2xlarge (4 cpu, 32 ram [+35.5GB for swap])
