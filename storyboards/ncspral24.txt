@@ -11,14 +11,15 @@ VmWare:
 - RAM: 32
 - Disks: 3
  * boot: 104 MB
- * root: 41.8 GB
+ * root + swap: 44 GB
+    * swap: 8.4 GB
  * fio: 600 GB
 
 SMS migration time:
  - 5hr35min
 
 AWS EC2 Instance:
-- type: r4.xlarge (4 cpu, 32 ram)
+- type: r4.xlarge or r4.2xlarge (4 cpu, 32 ram [+8.4GB for swap])
 - ENA: no (RHEL5 too old)
 
 
@@ -51,6 +52,11 @@ sudo /sbin/shutdown -h now
 [ ] Start up ncspral24-aws-clone VmWare instance
 
 [ ] Login to ncspral24-aws-clone via VmWare KVM console
+
+
+== Storyboard: Remove Swap ==
+
+[ ] TODO: remove swap
 
 
 == Storyboard: Disable services ==
@@ -205,6 +211,10 @@ Description: ncspral24
 [ ] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral24-aws-clone-*
 
 
+== Storyboard: Add security groups ==
+ [ ] TODO
+
+
 == Storyboad: Create AWS EC2 Instance ==
 
 [ ] Navigate to AWS EC2 Instances and click "Launch Instance"
@@ -341,3 +351,25 @@ sudo /sbin/reboot
 [ ] Navigate to ncspral24-aws-clone
 
 [ ] Delete from disk ncspral24-aws-clone
+
+
+== Storyboard: Re-activate services ==
+
+[ ] TODO: activate services deactivated previously
+
+
+== Storyboard: BigIP Updates ==
+
+[ ] TODO: Update BigIP configs
+
+
+== Storyboard: DNS Updates ==
+
+[ ] update DNS record for ncspral18.srv.nchub.net to 172.28.224.44
+
+[ ] TODO: Update DNS for server
+
+
+== Storyboard: Host File Updates ==
+
+[ ] TODO: Modify host files that refer to the server
