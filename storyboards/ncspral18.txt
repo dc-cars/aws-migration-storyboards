@@ -31,12 +31,32 @@ AWS EC2 Instance:
 
 [ ] Navigate to ncspral18
 
+[ ] Launch ncspral18 KVM console
+
 [ ] SSH into the ncspral18
+
+[ ] Reboot the machine to have it perform disk checks
 {{{
-sudo /sbin/shutdown -h now
+sudo /sbin/reboot
+}}}
+
+[ ] Disable nbclient service
+{{{
+sudo /sbin/chkconfig --list nbclient
+sudo /sbin/chkconfig --level 235 nbclient off
+sudo /sbin/chkconfig --list nbclient | grep ":on"
+}}}
+
+[ ] Stop MySQL services
+{{{
+sudo /etc/init.d/mysql stop
+sudo killall mysqld && sleep 15;
 }}}
 
 [ ] Stop ncspral18 VmWare instance
+{{{
+sudo /sbin/shutdown -h now
+}}}
 
 [ ] Clone ncspral18 VmWare instance to ncspral18-aws-clone
   - place it in Cars-SM/AWS migration
@@ -46,6 +66,14 @@ sudo /sbin/shutdown -h now
 [ ] Wait for clone task to complete and power up original vm
 
 [ ] Start ncspral18 vm (non clone)
+
+[ ] Enable nbclient service
+{{{
+sudo /sbin/chkconfig --list nbclient
+sudo /sbin/chkconfig --level 235 nbclient on
+sudo /sbin/chkconfig --list nbclient | grep ":on"
+sudo /etc/init.d/nbclient start
+}}}
 
 [ ] Check ncspral18 vm for correct running services (mysql)
 {{{
@@ -64,34 +92,6 @@ ps auxw | grep -i unijob
 
 [ ] Login to ncspral18-aws-clone via VmWare KVM console
 
-
-== Storyboard: Disable nbclient service ==
-
-NOTE: This step is needed because ncspral18 hangs when attempting to start
-nbclient service at runlevel 2
-
-[ ] Boot into GRUB
-  * press ESC on the red intro screen
-
-[ ] Modify one time grub config to boot into single user mode
-  * Press e on `Red Hat Enterprise Linux Server (2.6.18-416.e15)`
-  * Press down arrow to highlight `kernel /vmlinuz-2.6.18-416.e15 ro root=/dev/vg00/lv01 rhbg quiet`
-  * Press e
-  * Replace the word `quiet` and the end of the string with `single`
-
-[ ] Press b to boot into the system
-
-[ ] Disable nbclient service
-{{{
-sudo /sbin/chkconfig --list nbclient
-sudo /sbin/chkconfig --level 235 nbclient off
-sudo /sbin/chkconfig --list nbclient | grep ":on"
-}}}
-
-[ ] Reboot the server
-{{{
-sudo /sbin/reboot
-}}}
 
 == Storyboard: Disable Swap Mount on Boot ==
 
@@ -139,6 +139,7 @@ sudo /sbin/chkconfig --list crond | grep ":on"
 sudo /sbin/chkconfig --list mysql
 sudo /sbin/chkconfig --level 345 mysql off
 sudo /sbin/chkconfig --list mysql | grep ":on"
+sudo /etc/init.d/mysql stop
 }}}
 
 [ ] Disable other mysql service started in rc.local
@@ -149,6 +150,10 @@ sudo emacs /etc/rc.local
 comment out
 {{{
 /usr/local/mysql/bin/mysqld_safe --defaults-file=/usr/local/mysql/my_newcpc.cnf &
+}}}
+
+{{{
+sudo killall mysqld
 }}}
 
 [ ] Disable Nagios NRPE client service
