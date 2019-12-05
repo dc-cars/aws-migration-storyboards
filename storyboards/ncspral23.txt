@@ -29,12 +29,19 @@ AWS EC2 Instance:
 
 [ ] Navigate to ncspral23
 
+[ ] Launch ncspral23 KVM console
+
 [ ] SSH into the ncspral23
+
+[ ] Reboot the machine to have it perform disk checks
 {{{
-sudo /sbin/shutdown -h now
+sudo /sbin/reboot
 }}}
 
 [ ] Stop ncspral23 VmWare instance
+{{{
+sudo /sbin/shutdown -h now
+}}}
 
 [ ] Clone ncspral23 VmWare instance to ncspral23-aws-clone
   - place it in Cars-SM/AWS migration

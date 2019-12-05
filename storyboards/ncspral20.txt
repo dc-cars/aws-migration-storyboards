@@ -29,7 +29,16 @@ AWS EC2 Instance:
 
 [ ] Navigate to ncspral20
 
+[ ] Launch ncspral20 KVM console
+
 [ ] SSH into the ncspral20
+
+[ ] Reboot the machine to have it perform disk checks
+{{{
+sudo /sbin/reboot
+}}}
+
+[ ] Stop ncspral20 VmWare instance
 {{{
 sudo /sbin/shutdown -h now
 }}}
