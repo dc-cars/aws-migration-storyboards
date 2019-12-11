@@ -66,4 +66,6 @@ ncspral20
 [ ] Wait until the status is: Available (Enabled) - Pool member is available
 
 [ ] Test access to the new server via VIP (use browser)
-    TODO: add URL
+{{{
+    admin.stage.newcars.com
+}}}
