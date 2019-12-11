@@ -1,0 +1,69 @@
+ncspral20
+=========
+
+== Storyboard: Update BigIP VIPs to use AWS instance ==
+
+[ ] Login to BigIP F5
+
+=== VIP: admin.newcars.com_mysql_3306 / Pool: newcars_admin.prod.db-1 ===
+
+[ ] Locate following VIP/Pool
+{{{
+- VIP: admin.newcars.com_mysql_3306
+  - Pool: newcars_admin.prod.db-1
+    - Pool member: 172.20.89.46:3306
+      - State: Available (Enabled) - Pool member is available
+}}}
+
+[ ] Navigate to Pool members
+
+[ ] Remove old Pool member: 172.20.89.46:3306
+
+[ ] Add new Pool member: 172.28.224.46:3306
+
+[ ] Wait until the status is: Available (Enabled) - Pool member is available
+
+[ ] Test access to the new server via VIP (use mariadb mysql client)
+    TODO: add details
+
+=== VIP: admin.prod.db.newcars.com / Pool: newcars_admin.prod.db-1 ===
+
+[ ] Locate following VIP/Pool
+{{{
+- VIP: admin.prod.db.newcars.com
+  - Pool: newcars_admin.prod.db-1
+    - Pool member: 172.20.89.46:3306
+      - State: Available (Enabled) - Pool member is available
+}}}
+
+[ ] Navigate to Pool members
+
+[ ] Remove old Pool member: 172.20.89.46:3306
+
+[ ] Add new Pool member: 172.28.224.46:3306
+
+[ ] Wait until the status is: Available (Enabled) - Pool member is available
+
+[ ] Test access to the new server via VIP (use mariadb mysql client)
+    TODO: add details
+
+=== VIP: admin.stage.newcars.com_http / Pool: newcars_admin_http.stage.web-1 ===
+
+[ ] Locate following VIP/Pool
+{{{
+- VIP: admin.stage.newcars.com_http
+  - Pool: newcars_admin_http.stage.web-1
+    - Pool member: 172.20.89.46:80
+      - State: Available (Enabled) - Pool member is available
+}}}
+
+[ ] Navigate to Pool members
+
+[ ] Remove old Pool member: 172.20.89.46:80
+
+[ ] Add new Pool member: 172.28.224.46:80
+
+[ ] Wait until the status is: Available (Enabled) - Pool member is available
+
+[ ] Test access to the new server via VIP (use browser)
+    TODO: add URL
