@@ -60,8 +60,6 @@ sudo /sbin/shutdown -h now
   - Use Newcars Hosts
   - Use data store with sufficient amount of disk
 
-[ ] Wait for clone task to complete and power up original vm
-
 [ ] Disable all NIC interfaces on VmWare ncspral20-aws-clone instance
 
 [ ] Start up ncspral20-aws-clone VmWare instance
@@ -87,7 +85,7 @@ sudo /sbin/shutdown -h now
 
 == Storyboard: Disable services ==
 
-Note: done so two running clone do mess with the infrastructure
+Note: done to prevent services from being active until we want them to be
 
 [ ] Disable anacron service
 {{{
@@ -300,11 +298,11 @@ Volumes: checked
 
 [ ] On "Step 6: Configure Security Group" click "Select an existing security group" and click "Review and Launch"
 {{{
-Cars-SM Default
+Cars-SM SSH
 Cars-SM FTP
 Cars-SM HTTP
 Cars-SM MySQL
-Cars-SM Nagios Remote Process Execution Client (nrpe)
+Cars-SM NRPE
 Cars-SM Unijob Client
 }}}
 
