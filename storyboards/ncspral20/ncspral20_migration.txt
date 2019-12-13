@@ -19,7 +19,7 @@ SMS migration time:
  - 6hr15min
 
 AWS EC2 Instance:
-- type: r4.2xlarge or r4.4xlarge (8 cpu, 64 ram [+8.4GB for swap]) ???
+- type: r4.2xlarge (update to r4.4xlarge if issues arise)
 - ENA: no (RHEL5 too old)
 
 
