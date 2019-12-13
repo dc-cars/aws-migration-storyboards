@@ -32,7 +32,7 @@ ncspral24
 
 [ ] Remove old Pool member: 172.20.89.54:3013
 
-[ ] Add new Pool member: 172.28.224.54:3013
+[ ] Add new Pool member: 172.28.240.14:3013
 
 [ ] Wait until the status is: Available (Enabled) - Pool member is available
 
@@ -74,7 +74,7 @@ export DB_NAME="newcars";
 
 [ ] Remove old Pool member: 172.20.89.54:3008
 
-[ ] Add new Pool member: 172.28.224.54:3008
+[ ] Add new Pool member: 172.28.240.14:3008
 
 [ ] Wait until status is: Available (Enabled) - Pool member is available
 
@@ -116,7 +116,7 @@ export DB_NAME="cps";
 
 [ ] Remove old Pool member: 172.20.89.54:3306
 
-[ ] Add new Pool member: 172.28.224.54:3306
+[ ] Add new Pool member: 172.28.240.14:3306
 
 [ ] Wait until status is: Available (Enabled) - Pool member is available
 
@@ -158,7 +158,7 @@ export DB_NAME="leads";
 
 [ ] Remove old Pool member: 172.20.89.54:3009
 
-[ ] Add new Pool member: 172.28.224.54:3009
+[ ] Add new Pool member: 172.28.240.14:3009
 
 [ ] Ensure mysql service for nc.repl.db.newcars.com is down
 {{{
@@ -247,7 +247,7 @@ export DB_NAME="semi";
 
 [ ] Remove old Pool member: 172.20.89.54:3014
 
-[ ] Add new Pool member: 172.28.224.54:3014
+[ ] Add new Pool member: 172.28.240.14:3014
 
 [ ] Wait until status is: Available (Enabled) - Pool member is available
 
@@ -288,7 +288,7 @@ export DB_NAME="semi";
 
 [ ] Remove old Pool member: 172.20.89.54:3007
 
-[ ] Add new Pool member: 172.28.224.54:3007
+[ ] Add new Pool member: 172.28.240.14:3007
 
 [ ] Wait until status is: Available (Enabled) - Pool member is available
 

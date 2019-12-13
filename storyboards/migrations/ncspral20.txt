@@ -1,27 +1,25 @@
 = Background =
 
-
-Role: Replicated databases
+Role: Data jobs, NLP Admin
 Kernel: 2.6.18-416.el5 #1 SMP
 Architecture: x86_64
-Contains: two mysqld_safe processes
-    - one run from /etc/rc.local modification
-    - one run from /etc/init.d
+Contains: mysqld, httpd, unijob client, vsftpd
 
 VmWare:
-- CPU: 4
-- RAM: 32
-- Disks: 3
- * boot + swap: 1.2 GB
-    * swap: 1.05 GB
- * root: 67.2 GB
- * fio: 280 GB
+- CPU: 8
+- RAM: 64
+- Disks: 4
+ * boot+swap: 8.5 GB
+    * swap 8.4GB
+ * root: 59 GB
+ * fio: 300 GB
+ * cars-data: 500 GB
 
 SMS migration time:
- - 3hr (estimate)
+ - 6hr15min
 
 AWS EC2 Instance:
-- type: r4.xlarge (4 cpu, 32 ram [+1 GB for swap])
+- type: r4.2xlarge or r4.4xlarge (8 cpu, 64 ram [+8.4GB for swap]) ???
 - ENA: no (RHEL5 too old)
 
 
@@ -29,91 +27,45 @@ AWS EC2 Instance:
 
 [ ] Login to VmWare console
 
-[ ] Navigate to ncspral18
+[ ] Navigate to ncspral20
 
-[ ] Launch ncspral18 KVM console
+[ ] Launch ncspral20 KVM console
 
-[ ] SSH into the ncspral18
+[ ] SSH into the ncspral20
 
 [ ] Reboot the machine to have it perform disk checks
 {{{
 sudo /sbin/reboot
 }}}
 
-[ ] Disable nbclient service
-{{{
-sudo /sbin/chkconfig --list nbclient
-sudo /sbin/chkconfig --level 235 nbclient off
-sudo /sbin/chkconfig --list nbclient | grep ":on"
-}}}
-
-[ ] Stop MySQL services
-{{{
-sudo /etc/init.d/mysql stop
-sudo killall mysqld && sleep 15;
-}}}
-
-[ ] Stop ncspral18 VmWare instance
+[ ] Stop ncspral20 VmWare instance
 {{{
 sudo /sbin/shutdown -h now
 }}}
 
-[ ] Clone ncspral18 VmWare instance to ncspral18-aws-clone
+[ ] Make sure ncspral20 VmWare instance is stopped
+
+[ ] Clone ncspral20 VmWare instance to ncspral20-aws-clone
   - place it in Cars-SM/AWS migration
   - Use Newcars Hosts
   - Use data store with sufficient amount of disk
 
 [ ] Wait for clone task to complete and power up original vm
 
-[ ] Start ncspral18 vm (non clone)
+[ ] Start ncspral20 vm (non clone)
 
-[ ] Enable nbclient service
-{{{
-sudo /sbin/chkconfig --list nbclient
-sudo /sbin/chkconfig --level 235 nbclient on
-sudo /sbin/chkconfig --list nbclient | grep ":on"
-sudo /etc/init.d/nbclient start
-}}}
+[ ] Check ncspral20 vm for correct running services (mysql, httpd, unijob)
 
-[ ] Check ncspral18 vm for correct running services (mysql)
-{{{
-ps auxw | grep anacron
-ps auxw | grep CentralServer
-ps auxw | grep crond
-ps auxw | grep mysql
-ps auxw | grep nrpe
-ps auxw | grep sendmail
-ps auxw | grep -i unijob
-}}}
+[ ] Disable all NIC interfaces on VmWare ncspral20-aws-clone instance
 
-[ ] Disable all NIC interfaces on VmWare ncspral18-aws-clone instance
+[ ] Start up ncspral20-aws-clone VmWare instance
 
-[ ] Start up ncspral18-aws-clone VmWare instance
-
-[ ] Login to ncspral18-aws-clone via VmWare KVM console
+[ ] Login to ncspral20 via VmWare KVM console
 
 
-== Storyboard: Disable Swap Mount on Boot ==
+== Storyboard: Remove Swap ==
 
-[ ] Check that swap is currently on
-{{{
-/sbin/swapon -s
-}}}
-
-[ ] Comment out swap mount statement line from `/etc/fstab`
-{{{
-LABEL=SWAP-sda2         swap            swap            defaults                0 0
-}}}
-
-[ ] Reboot server
-{{{
-sudo /sbin/reboot
-}}}
-
-[ ] Check that there is no swap. The output of this command should be empty
-{{{
-swapon -s
-}}}
+[ ] TODO: remove swap
 
 
 == Storyboard: Disable services ==
@@ -134,26 +86,28 @@ sudo /sbin/chkconfig --level 2345 crond off
 sudo /sbin/chkconfig --list crond | grep ":on"
 }}}
 
-[ ] Disable one mysql service through chkconfig
+[ ] Disable httpd service
 {{{
-sudo /sbin/chkconfig --list mysql
-sudo /sbin/chkconfig --level 345 mysql off
-sudo /sbin/chkconfig --list mysql | grep ":on"
-sudo /etc/init.d/mysql stop
+sudo /sbin/chkconfig --list httpd
+sudo /sbin/chkconfig --level 235 httpd off
+sudo /sbin/chkconfig --list httpd | grep ":on"
 }}}
 
-[ ] Disable other mysql service started in rc.local
+[ ] Disable mysql service
 {{{
 sudo emacs /etc/rc.local
 }}}
 
 comment out
 {{{
-/usr/local/mysql/bin/mysqld_safe --defaults-file=/usr/local/mysql/my_newcpc.cnf &
+/etc/init.d/mysqld start
 }}}
 
+[ ] Disable Netbackup client service
 {{{
-sudo killall mysqld
+sudo /sbin/chkconfig --list nbclient
+sudo /sbin/chkconfig --level 235 nbclient off
+sudo /sbin/chkconfig --list nbclient | grep ":on"
 }}}
 
 [ ] Disable Nagios NRPE client service
@@ -173,16 +127,10 @@ sudo /sbin/chkconfig --list sendmail | grep ":on"
 [ ] Disable unijob service
 {{{
 sudo /sbin/chkconfig --list unijob
-sudo /sbin/chkconfig --level 345 unijob off
+sudo /sbin/chkconfig --level 2345 unijob off
 sudo /sbin/chkconfig --list unijob | grep ":on"
 }}}
 
-[ ] Disable univiewerMS service
-{{{
-sudo /sbin/chkconfig --list univiewerMS
-sudo /sbin/chkconfig --level 345 univiewerMS off
-sudo /sbin/chkconfig --list univiewerMS | grep ":on"
-}}}
 
 [ ] Restart server
 {{{
@@ -192,12 +140,13 @@ sudo /sbin/reboot
 [ ] Run spot checks post reboot
 {{{
 ps auxw | grep anacron
-ps auxw | grep CentralServer
 ps auxw | grep crond
+ps auxw | grep httpd
 ps auxw | grep mysql
+ps auxw | grep nbclient
 ps auxw | grep nrpe
 ps auxw | grep sendmail
-ps auxw | grep -i unijob
+ps auxw | grep UNIJOB
 }}}
 
 [ ] Shutdown the clone machine
@@ -205,17 +154,18 @@ ps auxw | grep -i unijob
 sudo /sbin/shutdown -h now
 }}}
 
+
 == Storyboard: Migrate VmWare VM to AWS AMI using SMS ==
 
 [ ] Login in to AWS console
 
-[ ] Navigate to "Server Migration Service"
+[ ] Navigate to "SMS Service"
 
-[ ] Click on "Servers" sidebar section
+[ ] Click on "Server migration" sidebar section
 
 [ ] Click "Re-import server catalog" button
 
-[ ] Search for "ncspral18-aws-clone", select it and click "Create Replication Job" button
+[ ] Search for "ncspral20-aws-clone", select it and click "Create Replication Job" button
 
 [ ] on "Step 1: Select the servers" click "Next" button
 
@@ -224,7 +174,7 @@ sudo /sbin/shutdown -h now
 [ ] on "Step 3: Configure replication job settings" enter/select following in the fields
 {{{
 One-time migration
-Description: ncspral18-aws-clone
+Description: ncspral20-aws-clone
 }}}
 click "Next" button
 
@@ -241,21 +191,22 @@ Note: so it can be named better
 
 [ ] Navigate to AWS EC2 AMI and name the migrated AMI to
 {{{
-ncspral18-aws-clone
+ncspral20-aws-clone
 }}}
 
 [ ] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the migrated AMI
 {{{
-1GB:   ncspral18-aws-clone-boot
-67GB:  ncspral18-aws-clone-root
-601GB: ncspral18-aws-clone-fio
+9 GB   : ncspral20-aws-clone-boot+swap
+59 GB  : ncspral20-aws-clone-root
+300 GB : ncspral20-aws-clone-fio
+501 GB : ncspral20-aws-clone-cars-data
 }}}
 
-[ ] Navigate to AWS EC2 AMI and copy ncspral18-aws-clone AMI enter/select following values into the field
+[ ] Navigate to AWS EC2 AMI and copy ncspral20-aws-clone AMI enter/select following values into the field
 {{{
 Destination region: US East (North Virginia)
-Name: ncspral18
-Description: ncspral18
+Name: ncspral20
+Description: ncspral20
 }}}
 and click "Copy AMI"
 
@@ -263,20 +214,21 @@ Then wait for 5-15 min for AMI to copy, you will need to refresh the screen
 
 [ ] Name the newly copied AMI
 {{{
-Name: ncspral18
-Description: ncspral18
+Name: ncspral20
+Description: ncspral20
 }}}
 
 [ ] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the newly copied AMI
 {{{
-1GB:   ncspral18-ami-boot
-67GB:  ncspral18-ami-root
-601GB: ncspral18-ami-fio
+9 GB   : ncspral20-ami-boot+swap
+59 GB  : ncspral20-ami-root
+301 GB : ncspral20-ami-fio
+501 GB : ncspral20-ami-cars-data
 }}}
 
-[ ] Navigate to AWS EC2 AMI and "Deregister" (delete) the "ncspral18-aws-clone" AMI
+[ ] Navigate to AWS EC2 AMI and "Deregister" (delete) the "ncspral20-aws-clone" AMI
 
-[ ] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral18-aws-clone-*
+[ ] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral20-aws-clone-*
 
 
 == Storyboard: Add security groups ==
@@ -287,13 +239,13 @@ Description: ncspral18
 
 [ ] Navigate to AWS EC2 Instances and click "Launch Instance"
 
-[ ] On "Step 1: Choose an Amazon Machine Image (AMI)" step click "My AMIs" then select "ncspral18" AMI and click "Select"
+[ ] On "Step 1: Choose an Amazon Machine Image (AMI)" step click "My AMIs" then select "ncspral20" AMI and click "Select"
 
-[ ] On "Step 2: Choose an Instance Type" select "r4.xlarge" and click "Next: Configure Instance Details"
+[ ] On "Step 2: Choose an Instance Type" select "r4.2xlarge" and click "Next: Configure Instance Details"
 
 [ ] On "Step 3: Configure Instance Details" select/enter following and click "Next: Add Storage"
 
-todo: vpc, subnet, network interface ip settings will change for prod account
+TODO: vpc, subnet, network interface ip settings will change for prod account
 
 {{{
 Number of instances: 1
@@ -308,7 +260,7 @@ Tenancy: ??? (need to ask adam)
 
 Network interfaces:
 {{{
-Primary IP: 172.28.224.44
+Primary IP: 172.28.240.11
 }}}
 
 [ ] On "Step 4: Add Storage" select the following and click "Next: Add Tags"
@@ -316,16 +268,20 @@ Primary IP: 172.28.224.44
 Root Volume Type: ??? (talk to Adam) [this is actuall boot drive]
 EBS Volume Type:  ??? (talk to Adam) [this is actually root drive]
 EBS Volume Type:  ??? (talk to Adam) [this is actually fio drive with data]
+EBS Volume Type:  ??? (talk to Adam) [this is actually cars drive with data]
+
 
 Root Volume Type: Delete on termination, checked
 EBS Volume Type:  Delete on termination, checked
 EBS Volume Type:  Delete on termination, checked
+EBS Volume Type:  Delete on termination, checked
+
 }}}
 
 [ ] On "Step 5: Add Tags" and add following tags and click "next: Configure Security Group"
 {{{
 Key: Name
-Value: ncspral18
+Value: ncspral20
 Instances: checked
 Volumes: checked
 }}}
@@ -343,7 +299,7 @@ Cars-SM Default
 
 [ ] Navigatew to AWS EC2 Network interfaces and Name the network interface for the new Instance
 {{{
-ncspral18
+ncspral20
 }}}
 
 == Storyboard: Post first launch checks ==
@@ -354,20 +310,22 @@ ssh \
   -o UserKnownHostsFile=/dev/null \
   -o StrictHostKeyChecking=no \
   -o LogLevel=ERROR \
-  mryabushkin@172.28.224.44 \
+  mryabushkin@172.28.240.11 \
 ;
 }}}
 
 [ ] Run spot checks post reboot
 {{{
 ps auxw | grep anacron
-ps auxw | grep CentralServer
 ps auxw | grep crond
+ps auxw | grep httpd
 ps auxw | grep mysql
+ps auxw | grep nbclient
 ps auxw | grep nrpe
 ps auxw | grep sendmail
-ps auxw | grep -i unijob
+ps auxw | grep UNIJOB
 }}}
+
 
 
 == Storyboard: Updated machine networking ==
@@ -378,7 +336,7 @@ sudo nano -w /etc/sysconfig/network
 }}}
 append
 {{{
-HOSTNAME=ncspral18.classifiedventures.com
+HOSTNAME=ncspral20.classifiedventures.com
 }}}
 
 
@@ -388,11 +346,11 @@ sudo nano -w /etc/hosts
 }}}
 comment out old ip
 {{{
-#172.20.89.44           ncspral18.classifiedventures.com ncspral18
+#172.20.89.46           ncspral20.classifiedventures.com ncspral20
 }}}
 add new ip
 {{{
-172.28.224.44           ncspral18.classifiedventures.com ncspral18
+172.28.240.11           ncspral20.classifiedventures.com ncspral20
 }}}
 
 TODO: more greps for IP
@@ -408,16 +366,16 @@ sudo /sbin/reboot
 
 == Storyboard: Assign Security groups ==
 
-[ ] TODO: ncspral18 group
+[ ] TODO: ncspral20 group
 
 
 == Storyboard: Delete VmWare clone ==
 
 [ ] Login to VmWare console
 
-[ ] Navigate to ncspral18-aws-clone
+[ ] Navigate to ncspral20-aws-clone
 
-[ ] Delete from disk ncspral18-aws-clone
+[ ] Delete from disk ncspral20-aws-clone
 
 
 == Storyboard: Re-activate services ==
@@ -440,7 +398,3 @@ sudo /sbin/reboot
 == Storyboard: Host File Updates ==
 
 [ ] TODO: Modify host files that refer to the server
-
-
-== Storyboard: Verify Unijob Server Health ==
-TODO

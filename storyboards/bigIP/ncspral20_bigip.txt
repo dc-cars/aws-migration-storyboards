@@ -1,0 +1,138 @@
+ncspral20
+=========
+
+== Storyboard: Update BigIP VIPs to use AWS instance ==
+
+[ ] Open local terminal
+
+[ ] Export "cron" user password we use for checks
+{{{
+   export CRON_MYSQL_PW=<reducted>;
+
+   export FAILURE_COLOR=$(echo -e "\e[1;41m");
+   export SUCCESS_COLOR=$(echo -e "\e[1;42m");
+   export RESET_COLOR=$(echo -e "\e[0m");
+}}}
+
+[ ] Login to BigIP F5
+
+=== VIP: admin.newcars.com_mysql_3306 / Pool: newcars_admin.prod.db-1 ===
+
+[ ] Locate following VIP/Pool
+{{{
+- VIP: admin.newcars.com_mysql_3306
+  - Pool: newcars_admin.prod.db-1
+    - Pool member: 172.20.89.46:3306
+      - State: Available (Enabled) - Pool member is available
+}}}
+
+[ ] Navigate to Pool members
+
+[ ] Remove old Pool member: 172.20.89.46:3306
+
+[ ] Add new Pool member: 172.28.240.11:3306
+
+[ ] Wait until the status is: Available (Enabled) - Pool member is available
+
+[ ] Test access to the new server via VIP (use mariadb mysql client)
+{{{
+export DB_HOST="admin.newcars.com";
+export DB_NAME="newcars";
+( \
+  [ \
+    "$(mysql \
+     --host="${DB_HOST}" \
+     --port=3306 \
+     --database="${DB_NAME}" \
+     --user=cron \
+     --password="${CRON_MYSQL_PW}" \
+     --skip-auto-rehash \
+     --skip-column-names \
+     --batch \
+     --execute="select database();" \
+    )" == "${DB_NAME}" \
+  ] \
+  && echo -e "\n${SUCCESS_COLOR}SUCCESS: connection successful${RESET_COLOR}\n"; \
+) \
+|| echo -e "\n${FAILURE_COLOR}FAILURE: did not connect to database${RESET_COLOR}\n"
+}}}
+
+=== VIP: admin.prod.db.newcars.com / Pool: newcars_admin.prod.db-1 ===
+
+[ ] Locate following VIP/Pool
+{{{
+- VIP: admin.prod.db.newcars.com
+  - Pool: newcars_admin.prod.db-1
+    - Pool member: 172.20.89.46:3306
+      - State: Available (Enabled) - Pool member is available
+}}}
+
+[ ] Navigate to Pool members
+
+[ ] Remove old Pool member: 172.20.89.46:3306
+
+[ ] Add new Pool member: 172.28.240.11:3306
+
+[ ] Wait until the status is: Available (Enabled) - Pool member is available
+
+[ ] Test access to the new server via VIP (use mariadb mysql client)
+{{{
+export DB_HOST="admin.prod.db.newcars.com";
+export DB_NAME="newcars";
+( \
+  [ \
+    "$(mysql \
+     --host="${DB_HOST}" \
+     --port=3306 \
+     --database="${DB_NAME}" \
+     --user=cron \
+     --password="${CRON_MYSQL_PW}" \
+     --skip-auto-rehash \
+     --skip-column-names \
+     --batch \
+     --execute="select database();" \
+    )" == "${DB_NAME}" \
+  ] \
+  && echo -e "\n${SUCCESS_COLOR}SUCCESS: connection successful${RESET_COLOR}\n"; \
+) \
+|| echo -e "\n${FAILURE_COLOR}FAILURE: did not connect to database${RESET_COLOR}\n"
+}}}
+
+=== VIP: admin.stage.newcars.com_http / Pool: newcars_admin_http.stage.web-1 ===
+
+[ ] Locate following VIP/Pool
+{{{
+- VIP: admin.stage.newcars.com_http
+  - Pool: newcars_admin_http.stage.web-1
+    - Pool member: 172.20.89.46:80
+      - State: Available (Enabled) - Pool member is available
+}}}
+
+[ ] Navigate to Pool members
+
+[ ] Remove old Pool member: 172.20.89.46:80
+
+[ ] Add new Pool member: 172.28.240.11:80
+
+[ ] Wait until the status is: Available (Enabled) - Pool member is available
+
+[ ] Test access to the new server via VIP (use browser)
+{{{
+    admin.stage.newcars.com
+}}}
+
+
+== Storyboard: Add AWS subnets to IRule Data Group List ==
+
+[ ] Go to the IRule Data List in BigIP
+{{{
+https://teqlb.classifiedventures.com/tmui/Control/jspmap/tmui/locallb/datagroup/properties.jsp?name=/Common/admin_newcars_internal
+}}}
+
+[ ] Put 172.28.240.0/24 in the Address text box
+
+[ ] Press Add
+
+[ ] Put 172.28.241.0/24 in the Adress text box
+
+[ ] Press Add

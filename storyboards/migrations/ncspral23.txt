@@ -255,7 +255,7 @@ Tenancy: ??? (need to ask adam)
 
 Network interfaces:
 {{{
-Primary IP: 172.28.224.53
+Primary IP: 172.28.240.13
 }}}
 
 [ ] On "Step 4: Add Storage" select the following and click "Next: Add Tags"
@@ -301,7 +301,7 @@ ssh \
   -o UserKnownHostsFile=/dev/null \
   -o StrictHostKeyChecking=no \
   -o LogLevel=ERROR \
-  mryabushkin@172.28.224.53 \
+  mryabushkin@172.28.240.13 \
 ;
 }}}
 
@@ -340,7 +340,7 @@ comment out old ip
 }}}
 add new ip
 {{{
-172.28.224.53           ncspral23.classifiedventures.com ncspral23
+172.28.240.13           ncspral23.classifiedventures.com ncspral23
 }}}
 
 TODO: more greps for IP
