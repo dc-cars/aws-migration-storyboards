@@ -233,7 +233,7 @@ Name: ncspral20
 Description: ncspral20
 }}}
 
-[ ] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the newly copied AMI
+[ ] Navigate to AWS EC2 Snapshots and name the 4 snapshots associate with the newly copied AMI
 {{{
 9 GB   : ncspral20-ami-boot+swap
 59 GB  : ncspral20-ami-root
@@ -243,7 +243,7 @@ Description: ncspral20
 
 [ ] Navigate to AWS EC2 AMI and "Deregister" (delete) the "ncspral20-aws-clone" AMI
 
-[ ] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral20-aws-clone-*
+[ ] Navigate to AWS EC2 Snapshots and delete the 4 snapshots with old AMI, all named ncspral20-aws-clone-*
 
 
 == Storyboad: Create AWS EC2 Instance ==
