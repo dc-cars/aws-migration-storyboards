@@ -45,6 +45,7 @@ sudo /sbin/shutdown -h now
 
 [ ] Make sure ncspral20 VmWare instance is stopped
 
+[ ] Disconnect all NICs on ncspral20
 
 == Storyboard: Silence Nagios checks ==
 
