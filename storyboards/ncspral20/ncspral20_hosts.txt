@@ -1,5 +1,7 @@
-= Storyboard: Scan all legacy servers /etc/hosts =
+= Storyboard: Update /etc/hosts to new up =
 
+[ ] Run a scan
+{{{
 for srv in \
 ncspral2 \
 ncspral3 \
@@ -25,40 +27,61 @@ do \
   ssh "${srv}" grep "172.20.89.46" /etc/hosts; \
   echo ""; \
 done
+}}}
 
-
-= Storyboard: Update /etc/hosts to new up =
 
 [ ] go over the /etc/hosts on servers below and change 172.20.89.46 to 172.28.240.11
 
-== ncspral5: /etc/hosts ==
+* ncspral5: /etc/hosts
+ - 172.20.89.46  admin.newcars.com
+ - 172.20.89.46  mary.newcars.com
 
-[ ] 172.20.89.46  admin.newcars.com
-[ ] 172.20.89.46  mary.newcars.com
+* ncspral18: /etc/hosts
+ - 172.20.89.46  admin.newcars.com
+ - 172.20.89.46  mindy.newcars.com
 
-== ncspral18: /etc/hosts ==
+* ncspral20: /etc/hosts
+ - 172.20.89.46  ncspral20.classifiedventures.com
+ - 172.20.89.46  ncspral20
 
-[ ] 172.20.89.46  admin.newcars.com
-[ ] 172.20.89.46  mindy.newcars.com
+* ncspral23: /etc/hosts
+ - 172.20.89.46  admin.newcars.com
 
-== ncspral20: /etc/hosts ==
+* ncspral24: /etc/hosts
+ - 172.20.89.46  admin.newcars.com
 
-[ ] 172.20.89.46  ncspral20.classifiedventures.com
-[ ] 172.20.89.46  ncspral20
+* ncspral27: /etc/hosts
+ - 172.20.89.46 admin.newcars.com
 
-== ncspral23: /etc/hosts ==
+* ncspral54: /etc/hosts ==
+ - 172.20.89.46  admin.newcars.com
+ - 172.20.89.46  mindy.newcars.com
 
-[ ] 172.20.89.46  admin.newcars.com
-
-== ncspral24: /etc/hosts ==
-
-[ ] 172.20.89.46  admin.newcars.com
-
-== ncspral27: /etc/hosts ==
-
-[ ] 172.20.89.46 admin.newcars.com
-
-== ncspral54: /etc/hosts ==
-
-[ ] 172.20.89.46  admin.newcars.com
-[ ] 172.20.89.46  mindy.newcars.com
+[ ] Run a scan
+{{{
+for srv in \
+ncspral2 \
+ncspral3 \
+ncspral5 \
+ncspral14 \
+ncspral15 \
+ncspral18 \
+ncspral20 \
+ncspral21 \
+ncspral23 \
+ncspral24 \
+ncspral27 \
+ncspral29 \
+ncspral32 \
+ncspral33 \
+ncspral54 \
+ncspral61 \
+ncspral63 \
+pantheon \
+; \
+do \
+  echo "= ${srv} ="; \
+  ssh "${srv}" grep "172.20.89.46" /etc/hosts; \
+  echo ""; \
+done
+}}}
