@@ -29,7 +29,7 @@ VPN CIDR:
 300 Chicago office:
 172.24.160.0/21
 
-300 CHicago office tech users
+300 Chicago office tech users
 172.24.168.0/23
 
 Santa Monica office:
