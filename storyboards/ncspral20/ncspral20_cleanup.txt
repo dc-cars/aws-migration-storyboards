@@ -1,0 +1,10 @@
+ncspral20
+=========
+
+== Storyboard: Delete VmWare clone ==
+
+[ ] Login to VmWare console
+
+[ ] Navigate to ncspral20-aws-clone
+
+[ ] Delete

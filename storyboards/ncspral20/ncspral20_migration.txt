@@ -45,6 +45,16 @@ sudo /sbin/shutdown -h now
 
 [ ] Make sure ncspral20 VmWare instance is stopped
 
+
+== Storyboard: Silence Nagios checks ==
+
+[ ] Acknowledge ncspral20 host + services alerts
+
+[ ] Acknowledge ncspral23/24 admin repl alerts
+
+
+== Storyboard: Clone ncspral20 ==
+
 [ ] Clone ncspral20 VmWare instance to ncspral20-aws-clone
   - place it in Cars-SM/AWS migration
   - Use Newcars Hosts
@@ -52,21 +62,28 @@ sudo /sbin/shutdown -h now
 
 [ ] Wait for clone task to complete and power up original vm
 
-[ ] Start ncspral20 vm (non clone)
-
-[ ] Check ncspral20 vm for correct running services (mysql, httpd, unijob)
-
 [ ] Disable all NIC interfaces on VmWare ncspral20-aws-clone instance
 
 [ ] Start up ncspral20-aws-clone VmWare instance
 
-[ ] Login to ncspral20 via VmWare KVM console
+[ ] Login to ncspral20-aws-clone via VmWare KVM console
 
 
 == Storyboard: Remove Swap ==
 
-[ ] TODO: remove swap
+[ ] Check that there is swap partition
+{{{
+/sbin/swapon -s
+}}}
 
+[ ] Comment out `LABEL=SWAP-sda2		swap		swap		defaults		0 0` in `/etc/fstab`
+
+[ ] Reboot machine
+
+[ ] Check that there is no swap partition
+{{{
+/sbin/swapon -s
+}}}
 
 == Storyboard: Disable services ==
 
@@ -231,10 +248,6 @@ Description: ncspral20
 [ ] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral20-aws-clone-*
 
 
-== Storyboard: Add security groups ==
- [ ] TODO
-
-
 == Storyboad: Create AWS EC2 Instance ==
 
 [ ] Navigate to AWS EC2 Instances and click "Launch Instance"
@@ -245,12 +258,11 @@ Description: ncspral20
 
 [ ] On "Step 3: Configure Instance Details" select/enter following and click "Next: Add Storage"
 
-TODO: vpc, subnet, network interface ip settings will change for prod account
 
 {{{
 Number of instances: 1
-Network: vpc-0003f0f3f28282042 | NewCars-NP-East
-Subnet: subnet-0baf34a170551fefb | Cars.com-Newcars-NP web | us-east-1a
+Network: vpc-0ddfa4a49d23118dc | Newcars-Prod-East
+Subnet: subnet-0b6106485c4ade9bf | Cars.com-Newcars-Prod web us-east-1a
 Auto-assign Public IP: Use subnet setting (Disable)
 Placement group: ??? (need to ask adam)
 CPU options: ??? (need to ask adam)
@@ -287,9 +299,13 @@ Volumes: checked
 }}}
 
 [ ] On "Step 6: Configure Security Group" click "Select an existing security group" and click "Review and Launch"
-TODO: need additional groups that allow access to multiple mysql ports on this machine
 {{{
 Cars-SM Default
+Cars-SM FTP
+Cars-SM HTTP
+Cars-SM MySQL
+Cars-SM Nagios Remote Process Execution Client (nrpe)
+Cars-SM Unijob Client
 }}}
 
 [ ] On "Step 7: Review Instance Launch" review all the settings and click "Launch"
@@ -310,7 +326,7 @@ ssh \
   -o UserKnownHostsFile=/dev/null \
   -o StrictHostKeyChecking=no \
   -o LogLevel=ERROR \
-  mryabushkin@172.28.240.11 \
+  dchun@172.28.240.11 \
 ;
 }}}
 
@@ -353,8 +369,6 @@ add new ip
 172.28.240.11           ncspral20.classifiedventures.com ncspral20
 }}}
 
-TODO: more greps for IP
-
 
 [ ] Reboot the machine
 {{{
@@ -363,38 +377,95 @@ sudo /sbin/reboot
 
 [ ] Check System Log for errors
 
+== Storyboard: Update Nagios ==
+[ ] Update IP for ncspral20 entry in Nagios to 172.28.240.11 (Michael)
 
-== Storyboard: Assign Security groups ==
+== Storyboard: Route 53 DNS Updates ==
 
-[ ] TODO: ncspral20 group
+[ ] update DNS record for ncspral20.srv.nchub.net to 172.28.240.11
+    NOTE: PTR record is already created in Route 53 for this server
 
-
-== Storyboard: Delete VmWare clone ==
-
-[ ] Login to VmWare console
-
-[ ] Navigate to ncspral20-aws-clone
-
-[ ] Delete from disk ncspral20-aws-clone
-
-
-== Storyboard: Re-activate services ==
-
-[ ] TODO: activate services deactivated previously
-
+== Storyboard: Update /etc/hosts in legacy servers ==
+[ ] Refer to ncspral20_hosts.txt for storyboard
 
 == Storyboard: BigIP Updates ==
 
-[ ] TODO: Update BigIP configs
+[ ] Refer to ncspral20_bigip.txt for storyboard
+
+== Storyboard: Re-activate services ==
+[ ] Enable anacron service
+{{{
+sudo /sbin/chkconfig --list anacron
+sudo /sbin/chkconfig --level 2345 anacron on
+sudo /sbin/chkconfig --list anacron
+}}}
+
+[ ] Enable crond service
+{{{
+sudo /sbin/chkconfig --list crond
+sudo /sbin/chkconfig --level 2345 crond on
+sudo /sbin/chkconfig --list crond
+}}}
+
+[ ] Enable httpd service
+{{{
+sudo /sbin/chkconfig --list httpd
+sudo /sbin/chkconfig --level 235 httpd on
+sudo /sbin/chkconfig --list httpd
+}}}
+
+[ ] Enable mysql service
+{{{
+sudo emacs /etc/rc.local
+}}}
+
+uncomment
+{{{
+/etc/init.d/mysqld start
+}}}
+
+[ ] Enable Netbackup client service
+{{{
+sudo /sbin/chkconfig --list nbclient
+sudo /sbin/chkconfig --level 235 nbclient on
+sudo /sbin/chkconfig --list nbclient
+}}}
+
+[ ] Enable Nagios NRPE client service
+{{{
+sudo /sbin/chkconfig --list nrpe
+sudo /sbin/chkconfig --level 345 nrpe on
+sudo /sbin/chkconfig --list nrpe
+}}}
+
+[ ] Enable sendmail service
+{{{
+sudo /sbin/chkconfig --list sendmail
+sudo /sbin/chkconfig --level 2345 sendmail on
+sudo /sbin/chkconfig --list sendmail
+}}}
+
+[ ] Enable unijob service
+{{{
+sudo /sbin/chkconfig --list unijob
+sudo /sbin/chkconfig --level 2345 unijob on
+sudo /sbin/chkconfig --list unijob
+}}}
 
 
-== Storyboard: DNS Updates ==
+[ ] Restart server
+{{{
+sudo /sbin/reboot
+}}}
 
-[ ] update DNS record for ncspral20.srv.nchub.net to 172.28.240.11
-
-[ ] TODO: Update DNS for server
-
-
-== Storyboard: Host File Updates ==
-
-[ ] TODO: Modify host files that refer to the server
+[ ] Run spot checks post reboot -- most should be running
+{{{
+ps auxw | grep anacron
+ps auxw | grep crond
+ps auxw | grep httpd
+ps auxw | grep mysql
+ps auxw | grep nbclient
+ps auxw | grep nrpe
+ps auxw | grep sendmail
+ps auxw | grep UNIJOB
+}}}

@@ -129,10 +129,12 @@ export DB_NAME="newcars";
 https://teqlb.classifiedventures.com/tmui/Control/jspmap/tmui/locallb/datagroup/properties.jsp?name=/Common/admin_newcars_internal
 }}}
 
-[ ] Put 172.28.240.0/24 in the Address text box
+[ ] Put 172.28.240.0/24 in the Address field
 
 [ ] Press Add
 
-[ ] Put 172.28.241.0/24 in the Adress text box
+[ ] Put 172.28.241.0/24 in the Address field
 
 [ ] Press Add
+
+[ ] Press Update
