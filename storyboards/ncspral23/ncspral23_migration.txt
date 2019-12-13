@@ -380,7 +380,7 @@ sudo /sbin/reboot
 
 == Storyboard: DNS Updates ==
 
-[ ] update DNS record for ncspral18.srv.nchub.net to 172.28.224.44
+[ ] update DNS record for ncspral23.srv.nchub.net to 172.28.240.13
 
 [ ] TODO: Update DNS for server
 

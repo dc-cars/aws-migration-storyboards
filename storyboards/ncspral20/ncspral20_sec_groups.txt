@@ -1,0 +1,19 @@
+ncspral20 Security Groups
+=========================
+
+$ sudo netstat -tlpn
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address               Foreign Address             State       PID/Program name
+tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN      11820/mysqld
+
+tcp        0      0 0.0.0.0:21                  0.0.0.0:*                   LISTEN      11366/vsftpd
+
+tcp        0      0 0.0.0.0:5666                0.0.0.0:*                   LISTEN      11382/nrpe
+
+tcp        0      0 0.0.0.0:10641               0.0.0.0:*                   LISTEN      11698/uniio
+tcp        0      0 0.0.0.0:10642               0.0.0.0:*                   LISTEN      11715/unicdj
+tcp        0      0 0.0.0.0:10643               0.0.0.0:*                   LISTEN      11728/unical
+
+tcp        0      0 :::80                       :::*                        LISTEN      11433/httpd
+
+tcp        0      0 :::22                       :::*                        LISTEN      11218/sshd
