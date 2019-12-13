@@ -209,7 +209,7 @@ Note: so it can be named better
 ncspral20-aws-clone
 }}}
 
-[ ] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the migrated AMI
+[ ] Navigate to AWS EC2 Snapshots and name the 4 snapshots associate with the migrated AMI
 {{{
 9 GB   : ncspral20-aws-clone-boot+swap
 59 GB  : ncspral20-aws-clone-root
@@ -311,7 +311,7 @@ Cars-SM Unijob Client
 
 [] On "Select an existing key pair or create a new key pair" popup select "Proceed without a key pair", check the "acknowledge..." checkbox and click "Launch Instances"
 
-[ ] Navigatew to AWS EC2 Network interfaces and Name the network interface for the new Instance
+[ ] Navigate to AWS EC2 Network interfaces and Name the network interface for the new Instance
 {{{
 ncspral20
 }}}
@@ -374,6 +374,11 @@ sudo /sbin/reboot
 }}}
 
 [ ] Check System Log for errors
+
+[ ] Check that the hostname has change
+{{{
+hostname
+}}}
 
 == Storyboard: Update Nagios ==
 [ ] Update IP for ncspral20 entry in Nagios to 172.28.240.11 (Michael)
