@@ -1,0 +1,63 @@
+= Background =
+
+Part of AWS migration
+
+= Notes =
+
+https://stackoverflow.com/questions/34265266/remote-rejected-errors-after-mirroring-a-git-repository
+http://christoph.ruegg.name/blog/git-howto-mirror-a-github-repository-without-pull-refs.html
+
+= Storyboard: Mirror the repository from GHE appliance to GHE cloud =
+
+[ ] communicate out to all developers, designers the the repository is being cleaned
+
+[ ] check the repository for any pending pull requests
+
+[ ] print out existing refs minus HEAD and pull request ones to see if anything is weird
+{{{
+git ls-remote \
+  git@github.nchub.net:cars-sm/daikon_bdd.git \
+| cut -d$'\t' -f2 \
+| grep -v ^HEAD$ \
+| grep -v '^refs/pull/'
+}}}
+
+{{{
+<paste output>
+}}}
+
+[ ] Create bare repository
+{{{
+git init --bare daikon_bdd.git
+}}}
+
+[ ] Add config to pull from GHE appliance without GHE /pull refs and push it to the cloud
+{{{
+cat << EOF | tee -a daikon_bdd.git/config
+[remote "origin"]
+  url = git@github.nchub.net:cars-sm/daikon_bdd.git
+  fetch = +refs/heads/*:refs/heads/*
+  fetch = +refs/tags/*:refs/tags/*
+  fetch = +refs/change/*:refs/change/*
+  mirror = true
+[remote "cloud"]
+  url = git@cars-sm.github.com:cars-sm/daikon_bdd.git
+  mirror = true
+  skipDefaultUpdate = true
+EOF
+}}}
+
+[ ] Pull updates
+{{{
+cd daikon_bdd.git
+}}}
+
+[ ] push the repository to GHE cloud
+{{{
+git push cloud
+}}}
+
+===
+
+
+
