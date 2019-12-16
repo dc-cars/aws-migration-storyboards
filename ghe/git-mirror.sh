@@ -38,8 +38,7 @@ function main {
   local source_uri="${1}";
   local target_uri="${2}";
 
-  local target_name="$(basename "${source_uri}")";
-
+  local target_name="$(echo "${target_uri}" | rev | cut -d':' -f1 | rev)";
   # create temporary repository folder path
   local target_folder="${TMP_FOLDER}/${target_name}";
 
