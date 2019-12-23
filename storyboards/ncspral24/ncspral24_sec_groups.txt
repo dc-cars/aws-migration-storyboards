@@ -1,0 +1,14 @@
+$ sudo netstat -tlpn
+Password:
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address               Foreign Address             State       PID/Program name
+tcp        0      0 0.0.0.0:3008                0.0.0.0:*                   LISTEN      4588/mysqld
+tcp        0      0 0.0.0.0:3009                0.0.0.0:*                   LISTEN      4580/mysqld
+tcp        0      0 0.0.0.0:3013                0.0.0.0:*                   LISTEN      16649/mysqld
+tcp        0      0 0.0.0.0:3014                0.0.0.0:*                   LISTEN      4568/mysqld
+tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN      4576/mysqld
+tcp        0      0 0.0.0.0:3020                0.0.0.0:*                   LISTEN      4572/mysqld
+tcp        0      0 0.0.0.0:3007                0.0.0.0:*                   LISTEN      4584/mysqld
+tcp        0      0 0.0.0.0:5666                0.0.0.0:*                   LISTEN      4474/nrpe
+tcp        0      0 127.0.0.1:25                0.0.0.0:*                   LISTEN      4497/sendmail: acce
+tcp        0      0 :::22                       :::*                        LISTEN      4428/sshd

@@ -1,0 +1,30 @@
+= Storyboard: Update /etc/hosts to new up =
+
+[] Run a scan
+{{{
+for srv in \
+ncspral2 \
+ncspral3 \
+ncspral5 \
+ncspral14 \
+ncspral15 \
+ncspral18 \
+ncspral20 \
+ncspral21 \
+ncspral23 \
+ncspral24 \
+ncspral27 \
+ncspral29 \
+ncspral32 \
+ncspral33 \
+ncspral54 \
+ncspral61 \
+ncspral63 \
+pantheon \
+; \
+do \
+  echo "= ${srv} ="; \
+  ssh "${srv}" grep "172.20.89.54" /etc/hosts; \
+  echo ""; \
+done
+}}}
