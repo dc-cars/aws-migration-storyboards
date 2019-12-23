@@ -1,0 +1,194 @@
+ncspral24
+=========
+
+== Storyboard: Update BigIP VIPs to use AWS instance ==
+
+
+[] Open local terminal
+
+[] Export "cron" user password we use for checks
+{{{
+   export CRON_MYSQL_PW=<reducted>;
+
+   export FAILURE_COLOR=$(echo -e "\e[1;41m");
+   export SUCCESS_COLOR=$(echo -e "\e[1;42m");
+   export RESET_COLOR=$(echo -e "\e[0m");
+}}}
+
+[] Login to BigIP F5
+
+
+=== VIP: admin.repl.db.newcars.com / Pool: newcars_admin.repl.db-1 ===
+
+[] Locate following VIP/Pool
+{{{
+- VIP: admin.repl.db.newcars.com
+  - Pool: newcars_admin.repl.db-1
+    - Pool member: 172.20.89.53:3013
+      - State: Available (Enabled) - Pool member is available
+}}}
+
+[] Navigate to Pool members
+
+[] Remove old Pool member: 172.20.89.53:3013
+
+[] Add new Pool member: 172.28.240.13:3013
+
+[] Wait until the status is: Available (Enabled) - Pool member is available
+
+[] Test access to the new server via VIP (use mariadb mysql client)
+{{{
+export DB_HOST="admin.repl.db.newcars.com";
+export DB_NAME="newcars";
+( \
+  [ \
+    "$(mysql \
+     --host="${DB_HOST}" \
+     --port=3306 \
+     --database="${DB_NAME}" \
+     --user=cron \
+     --password="${CRON_MYSQL_PW}" \
+     --skip-auto-rehash \
+     --skip-column-names \
+     --batch \
+     --execute="select database();" \
+    )" == "${DB_NAME}" \
+  ] \
+  && echo -e "\n${SUCCESS_COLOR}SUCCESS: connection successful${RESET_COLOR}\n"; \
+) \
+|| echo -e "\n${FAILURE_COLOR}FAILURE: did not connect to database${RESET_COLOR}\n"
+}}}
+
+
+=== VIP: cps.repl.db.newcars.com / Pool: cps_repl_db_pool ===
+
+[] Locate following VIP/Pool
+{{{
+- VIP: cps.repl.db.newcars.com
+  - Pool: cps_repl_db_pool
+    - Pool member: 172.20.89.53:3008
+      - State: Offline (Disabled) - Forced down
+}}}
+
+[] Navigate to Pool members
+
+[] Remove old Pool member: 172.20.89.53:3008
+
+[] Add new Pool member: 172.28.240.13:3008
+
+[] Wait until status is: Offline (Disabled) - Forced down
+
+=== VIP: leads.repl.db.newcars.com / Pool: newcars_leads.repl.db-1 ===
+
+[] Locate following VIP/Pool
+{{{
+- VIP: leads.repl.db.newcars.com
+  - Pool: newcars_leads.repl.db-1
+    - Pool member: 172.20.89.53:3306
+      - State: Offline (Disabled) - Forced down
+}}}
+
+[] Navigate to Pool members
+
+[] Remove old Pool member: 172.20.89.53:3306
+
+[] Add new Pool member: 172.28.240.13:3306
+
+[] Wait until status is: Offline (Disabled) - Forced down
+
+=== VIP: nc.repl.db.newcars.com / Pool: nc_repl_db_pool ===
+
+[] Locate following VIP/Pool
+{{{
+- VIP: nc.repl.db.newcars.com
+  - Pool: nc_repl_db_pool
+    - Pool member: 172.20.89.53:3009
+      - State: Available (Enabled) - Pool member is available
+}}}
+
+[] Navigate to Pool members
+
+[] Remove old Pool member: 172.20.89.53:3009
+
+[] Add new Pool member: 172.28.240.13:3009
+
+[] Wait until status is: Available (Enabled) - Pool member is available
+
+[] Test access to the new server VIP (use mariadb mysql client)
+{{{
+export DB_HOST="nc.repl.db.newcars.com";
+export DB_NAME="nc";
+( \
+  [ \
+    "$(mysql \
+     --host="${DB_HOST}" \
+     --port=3306 \
+     --database="${DB_NAME}" \
+     --user=cron \
+     --password="${CRON_MYSQL_PW}" \
+     --skip-auto-rehash \
+     --skip-column-names \
+     --batch \
+     --execute="select database();" \
+    )" == "${DB_NAME}" \
+  ] \
+  && echo -e "\n${SUCCESS_COLOR}SUCCESS: connection successful${RESET_COLOR}\n"; \
+) \
+|| echo -e "\n${FAILURE_COLOR}FAILURE: did not connect to database${RESET_COLOR}\n"
+}}}
+
+
+=== VIP: new-semi.repl.db.newcars.com / Pool: newcars_new-semi.repl.db-1 ===
+
+[] Locate following VIP/Pool
+{{{
+- VIP: new-semi.repl.db.newcars.com
+  - Pool: newcars_new-semi.repl.db-1
+    - Pool member: 172.20.89.53:3020
+      - State: Offline (Disabled) - Forced down
+}}}
+
+[] Navigate to Pool members
+
+[] Remove old Pool member: 172.20.89.53:3020
+
+[] Add new Pool member: 172.20.89.53:3020
+
+[] Wait until status is: Offline (Disabled) - Forced down
+
+
+=== VIP: old-semi.repl.db.newcars.com / Pool: newcars_old-semi.repl.db-1 ===
+
+[] Locate following VIP/Pool
+{{{
+- VIP: old-semi.repl.db.newcars.com
+  - Pool: newcars_old-semi.repl.db-1
+    - Pool member: 172.20.89.53:3014
+      - State: Offline (Disabled) - Forced down
+}}}
+
+[] Navigate to Pool members
+
+[] Remove old Pool member: 172.20.89.53:3014
+
+[] Add new Pool member: 172.28.240.13:3014
+
+[] Wait until status is: Offline (Disabled) - Forced down
+
+
+=== VIP: wps.repl.db.newcars.com / Pool: wps_repl_db_pool ===
+
+[] Locate following VIP/Pool
+{{{
+- VIP: wps.repl.db.newcars.com
+  - Pool: wps_repl_db_pool
+    - Pool member: 172.20.89.53:3007
+      - State: Offline (Disabled) - Forced down
+}}}
+[] Navigate to Pool members
+
+[] Remove old Pool member: 172.20.89.53:3007
+
+[] Add new Pool member: 172.28.240.13:3007
+
+[] Wait until status is: Offline (Disabled) - Forced down
