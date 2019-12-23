@@ -1,6 +1,6 @@
 = Storyboard: Update /etc/hosts to new up =
 
-[ ] Run a scan
+[] Run a scan
 {{{
 for srv in \
 ncspral2 \
@@ -30,7 +30,7 @@ done
 }}}
 
 
-[ ] go over the /etc/hosts on servers below and change 172.20.89.46 to 172.28.240.11
+[] go over the /etc/hosts on servers below and change 172.20.89.46 to 172.28.240.11
 
 * ncspral5: /etc/hosts
  - 172.20.89.46  admin.newcars.com
@@ -57,7 +57,7 @@ done
  - 172.20.89.46  admin.newcars.com
  - 172.20.89.46  mindy.newcars.com
 
-[ ] Run a scan
+[] Run a scan
 {{{
 for srv in \
 ncspral2 \

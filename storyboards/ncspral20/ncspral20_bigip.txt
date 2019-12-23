@@ -3,22 +3,22 @@ ncspral20
 
 == Storyboard: Update BigIP VIPs to use AWS instance ==
 
-[ ] Open local terminal
+[x] Open local terminal
 
-[ ] Export "cron" user password we use for checks
+[x] Export "cron" user password we use for checks
 {{{
-   export CRON_MYSQL_PW=<reducted>;
+ export CRON_MYSQL_PW=olh4mf4;
 
-   export FAILURE_COLOR=$(echo -e "\e[1;41m");
-   export SUCCESS_COLOR=$(echo -e "\e[1;42m");
-   export RESET_COLOR=$(echo -e "\e[0m");
+export FAILURE_COLOR=$(echo -e "\e[1;41m");
+export SUCCESS_COLOR=$(echo -e "\e[1;42m");
+export RESET_COLOR=$(echo -e "\e[0m");
 }}}
 
-[ ] Login to BigIP F5
+[x] Login to BigIP F5
 
 === VIP: admin.newcars.com_mysql_3306 / Pool: newcars_admin.prod.db-1 ===
 
-[ ] Locate following VIP/Pool
+[x] Locate following VIP/Pool
 {{{
 - VIP: admin.newcars.com_mysql_3306
   - Pool: newcars_admin.prod.db-1
@@ -26,15 +26,15 @@ ncspral20
       - State: Available (Enabled) - Pool member is available
 }}}
 
-[ ] Navigate to Pool members
+[x] Navigate to Pool members
 
-[ ] Remove old Pool member: 172.20.89.46:3306
+[x] Disable old Pool member: 172.20.89.46:3306
 
-[ ] Add new Pool member: 172.28.240.11:3306
+[x] Add new Pool member: 172.28.240.11:3306
 
-[ ] Wait until the status is: Available (Enabled) - Pool member is available
+[x] Wait until the status is: Available (Enabled) - Pool member is available
 
-[ ] Test access to the new server via VIP (use mariadb mysql client)
+[x] Test access to the new server via VIP (use mariadb mysql client)
 {{{
 export DB_HOST="admin.newcars.com";
 export DB_NAME="newcars";
@@ -59,7 +59,7 @@ export DB_NAME="newcars";
 
 === VIP: admin.prod.db.newcars.com / Pool: newcars_admin.prod.db-1 ===
 
-[ ] Locate following VIP/Pool
+[x] Locate following VIP/Pool
 {{{
 - VIP: admin.prod.db.newcars.com
   - Pool: newcars_admin.prod.db-1
@@ -67,15 +67,15 @@ export DB_NAME="newcars";
       - State: Available (Enabled) - Pool member is available
 }}}
 
-[ ] Navigate to Pool members
+[x] Navigate to Pool members
 
-[ ] Remove old Pool member: 172.20.89.46:3306
+[x] Remove old Pool member: 172.20.89.46:3306
 
-[ ] Add new Pool member: 172.28.240.11:3306
+[x] Add new Pool member: 172.28.240.11:3306
 
-[ ] Wait until the status is: Available (Enabled) - Pool member is available
+[x] Wait until the status is: Available (Enabled) - Pool member is available
 
-[ ] Test access to the new server via VIP (use mariadb mysql client)
+[x] Test access to the new server via VIP (use mariadb mysql client)
 {{{
 export DB_HOST="admin.prod.db.newcars.com";
 export DB_NAME="newcars";
@@ -100,7 +100,7 @@ export DB_NAME="newcars";
 
 === VIP: admin.stage.newcars.com_http / Pool: newcars_admin_http.stage.web-1 ===
 
-[ ] Locate following VIP/Pool
+[x] Locate following VIP/Pool
 {{{
 - VIP: admin.stage.newcars.com_http
   - Pool: newcars_admin_http.stage.web-1
@@ -108,15 +108,15 @@ export DB_NAME="newcars";
       - State: Available (Enabled) - Pool member is available
 }}}
 
-[ ] Navigate to Pool members
+[x] Navigate to Pool members
 
-[ ] Remove old Pool member: 172.20.89.46:80
+[x] Disable old Pool member: 172.20.89.46:80
 
-[ ] Add new Pool member: 172.28.240.11:80
+[x] Add new Pool member: 172.28.240.11:80
 
-[ ] Wait until the status is: Available (Enabled) - Pool member is available
+[x] Wait until the status is: Available (Enabled) - Pool member is available
 
-[ ] Test access to the new server via VIP (use browser)
+[x] Test access to the new server via VIP (use browser)
 {{{
     admin.stage.newcars.com
 }}}
@@ -124,17 +124,17 @@ export DB_NAME="newcars";
 
 == Storyboard: Add AWS subnets to IRule Data Group List ==
 
-[ ] Go to the IRule Data List in BigIP
+[x] Go to the IRule Data List in BigIP
 {{{
 https://teqlb.classifiedventures.com/tmui/Control/jspmap/tmui/locallb/datagroup/properties.jsp?name=/Common/admin_newcars_internal
 }}}
 
-[ ] Put 172.28.240.0/24 in the Address field
+[x] Put 172.28.240.0/24 in the Address field
 
-[ ] Press Add
+[x] Press Add
 
-[ ] Put 172.28.241.0/24 in the Address field
+[x] Put 172.28.241.0/24 in the Address field
 
-[ ] Press Add
+[x] Press Add
 
-[ ] Press Update
+[x] Press Update
