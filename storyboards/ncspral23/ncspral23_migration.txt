@@ -226,10 +226,6 @@ Description: ncspral23
 [] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral23-aws-clone-*
 
 
-== Storyboard: Add security groups ==
- [] TODO
-
-
 == Storyboad: Create AWS EC2 Instance ==
 
 [] Navigate to AWS EC2 Instances and click "Launch Instance"
@@ -280,7 +276,9 @@ Volumes: checked
 [] On "Step 6: Configure Security Group" click "Select an existing security group" and click "Review and Launch"
 TODO: need additional groups that allow access to multiple mysql ports on this machine
 {{{
-Cars-SM Default
+Cars-SM ncspral23/ncspral24 MySQL
+Cars-SM NRPE
+Cars-SM SSH
 }}}
 
 [] On "Step 7: Review Instance Launch" review all the settings and click "Launch"
@@ -343,9 +341,6 @@ add new ip
 172.28.240.13           ncspral23.classifiedventures.com ncspral23
 }}}
 
-TODO: more greps for IP
-
-
 [] Reboot the machine
 {{{
 sudo /sbin/reboot
@@ -354,37 +349,65 @@ sudo /sbin/reboot
 [] Check System Log for errors
 
 
-== Storyboard: Assign Security groups ==
+== Storyboard: Route 53 DNS Updates ==
 
-[] TODO: ncspral23 group
+[] Create PTR record for ncspral23
 
+[] update DNS record for ncspral23.srv.nchub.net to 172.28.240.13
 
-== Storyboard: Delete VmWare clone ==
+== Storyboard: BigIP Updates ==
 
-[] Login to VmWare console
-
-[] Navigate to ncspral23-aws-clone
-
-[] Delete from disk ncspral23-aws-clone
+[] Refer to ncspral23_bigip.txt
 
 
 == Storyboard: Re-activate services ==
 
-[] TODO: activate services deactivated previously
+[] Enable anacron service
+{{{
+sudo /sbin/chkconfig --list anacron
+sudo /sbin/chkconfig --level 245 anacron on
+sudo /sbin/chkconfig --list anacron | grep ":on"
+}}}
 
+[] Enable atd service
+{{{
+sudo /sbin/chkconfig --list atd
+sudo /sbin/chkconfig --level 45 atd on
+sudo /sbin/chkconfig --list atd | grep ":on"
+}}}
 
-== Storyboard: BigIP Updates ==
+[] Enable crond service
+{{{
+sudo /sbin/chkconfig --list crond
+sudo /sbin/chkconfig --level 2345 crond on
+sudo /sbin/chkconfig --list crond | grep ":on"
+}}}
 
-[] TODO: Update BigIP configs
+[] Enable mysql service
+{{{
+sudo emacs /etc/rc.local
+}}}
 
+uncomment
+{{{
+/etc/init.d/mysqld start
+}}}
 
-== Storyboard: DNS Updates ==
+[] Enable Nagios NRPE client service
+{{{
+sudo /sbin/chkconfig --list nrpe
+sudo /sbin/chkconfig --level 345 nrpe on
+sudo /sbin/chkconfig --list nrpe | grep ":on"
+}}}
 
-[] update DNS record for ncspral23.srv.nchub.net to 172.28.240.13
+[] Enable sendmail service
+{{{
+sudo /sbin/chkconfig --list sendmail
+sudo /sbin/chkconfig --level 2345 sendmail on
+sudo /sbin/chkconfig --list sendmail | grep ":on"
+}}}
 
-[] TODO: Update DNS for server
-
-
-== Storyboard: Host File Updates ==
-
-[] TODO: Modify host files that refer to the server
+[] Restart server
+{{{
+sudo /sbin/reboot
+}}}
