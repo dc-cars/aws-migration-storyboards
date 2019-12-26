@@ -72,7 +72,25 @@ ps auxw | grep sendmail
 
 == Storyboard: Remove Swap ==
 
-[] TODO: remove swap
+[] Check swap is present
+{{{
+/sbin/swapon -s
+}}}
+
+[] Comment out this line from /etc/fstab
+{{{
+/dev/VolGroup00/LogVol01        swap        swap        defaults        0 0
+}}}
+
+[] Reboot server
+{{{
+sudo /sbin/reboot
+}}}
+
+[] Check that swap partition is not present
+{{{
+/sbin/swapon -s
+}}}
 
 
 == Storyboard: Disable services ==
@@ -151,6 +169,7 @@ ps auxw | grep sendmail
 {{{
 sudo /sbin/shutdown -h now
 }}}
+
 
 == Storyboard: Migrate VmWare VM to AWS AMI using SMS ==
 
