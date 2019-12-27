@@ -10,11 +10,9 @@ VmWare:
 - RAM: 32
 - Disks: 4
  * boot: 100 MB
- * swap 6 GB
-
- TODO: FIGURE OUT DISKS
-    * which disk: 160 GB
-    * which disk: 64.5 GB
+ * fio: 160 GB
+ * root + swap: 64.5 GB
+    * swap: 6GB
 
 SMS migration time:
  - TBD
@@ -186,7 +184,7 @@ sudo /sbin/shutdown -h now
 [] on "Step 2: Configure server-specific settings" click Next
 
 [] on "Step 3: Configure replication job settings" enter/select following in the fields
-{{{
+{{{writing narratives for index page, working through feedback
 One-time migration
 Description: ncspral27-aws-clone
 }}}
@@ -208,12 +206,11 @@ Note: so it can be named better
 ncspral27-aws-clone
 }}}
 
-TODO: UPDATE WITH CORRECT DISKS
 [] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the migrated AMI
 {{{
 1GB:    ncspral27-aws-clone-boot
-160GB:  ncspral27-aws-clone-root
-64.5GB: ncspral27-aws-clone-fio
+160GB:  ncspral27-aws-clone-fio
+64.5GB: ncspral27-aws-clone-root
 }}}
 
 [] Navigate to AWS EC2 AMI and copy ncspral27-aws-clone AMI enter/select following values into the field
@@ -232,12 +229,11 @@ Name: ncspral27
 Description: ncspral27
 }}}
 
-TODO: UPDATE WITH CORRECT DISKS
 [] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the newly copied AMI
 {{{
 100MB:   ncspral27-ami-boot
-160GB:   ncspral27-ami-root
-64.5GB:  ncspral27-ami-fio
+160GB:   ncspral27-ami-fio
+64.5GB:  ncspral27-ami-root
 }}}
 
 [] Navigate to AWS EC2 AMI and "Deregister" (delete) the "ncspral27-aws-clone" AMI
@@ -294,8 +290,6 @@ Volumes: checked
 [] On "Step 6: Configure Security Group" click "Select an existing security group" and click "Review and Launch"
 TODO: GET ALL SEC GROUPS
 {{{
-Cars-SM ncspral27/ncspral24 MySQL
-Cars-SM NRPE
 Cars-SM SSH
 }}}
 
@@ -309,12 +303,10 @@ Cars-SM SSH
 ncspral27
 }}}
 
-
+# physical machine driver (for HP)
 iodrive-snmp-agentx 0:off 1:on  2:on  3:on  4:on  5:on  6:off
+
+#virtualization libraries?
 libvirtd        0:off 1:off 2:off 3:off 4:on  5:on  6:off
 xend            0:off 1:off 2:on  3:off 4:on  5:on  6:off
 xendomains      0:off 1:off 2:off 3:off 4:on  5:on  6:off
-
-
-unijob          0:off 1:off 2:off 3:on  4:on  5:on  6:off
-mysqld
