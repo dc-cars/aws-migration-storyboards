@@ -1,0 +1,320 @@
+= Background =
+
+Role: Lead System
+Kernel: 2.6.18-416.el5 #1 SMP
+Architecture: x86_64
+Contains: mysqld (run from /etc/rc.local), unijob client
+
+VmWare:
+- CPU: 4
+- RAM: 32
+- Disks: 4
+ * boot: 100 MB
+ * swap 6 GB
+
+ TODO: FIGURE OUT DISKS
+    * which disk: 160 GB
+    * which disk: 64.5 GB
+
+SMS migration time:
+ - TBD
+
+AWS EC2 Instance:
+- type: r4.xlarge (update to r4.2xlarge if issues arise)
+- ENA: no (RHEL5 too old)
+
+== Storyboard: Create clone of VmWare instance ==
+
+[] Login to VmWare console
+
+[] Navigate to ncspral27
+
+[] Launch ncspral27 KVM console
+
+[] SSH into the ncspral27
+
+[] Reboot the machine to have it perform disk checks
+{{{
+sudo /sbin/reboot
+}}}
+
+[] Stop ncspral27 VmWare instance
+{{{
+sudo /sbin/shutdown -h now
+}}}
+
+[] Clone ncspral27 VmWare instance to ncspral27-aws-clone
+  - place it in Cars-SM/AWS migration
+  - Use Newcars Hosts
+  - Use data store with sufficient amount of disk
+
+[] Wait for clone task to complete and power up original vm
+
+[] Start ncspral27 vm (non clone)
+
+[] Check ncspral27 vm for correct running services (mysql)
+{{{
+ps auxw | grep anacron
+ps auxw | grep atd
+ps auxw | grep crond
+ps auxw | grep mysql
+ps auxw | grep nrpe
+ps auxw | grep sendmail
+ps auxw | grep -i unijob
+}}}
+
+[] Disable all NIC interfaces on VmWare ncspral27-aws-clone instance
+
+[] Start up ncspral27-aws-clone VmWare instance
+
+[] Login to ncspral27-aws-clone via VmWare KVM console
+
+== Storyboard: Remove Swap ==
+
+[] Check that swap partition is present
+{{{
+/sbin/swapon -s
+}}}
+
+[] Comment out swap partition in /etc/fstab
+{{{
+/dev/VolGroup00/LogVol01_swap		swap		swap		defaults		0 0
+}}}
+
+[] Reboot server
+{{{
+sudo /sbin/reboot
+}}}
+
+[] Check that there is no swap partition
+{{{
+/sbin/swapon -s
+}}}
+
+== Storyboard: Disable services ==
+
+
+Note: done so two running clone do mess with the infrastructure
+
+[] Disable anacron service
+{{{
+sudo /sbin/chkconfig --list anacron
+sudo /sbin/chkconfig --level 2345 anacron off
+sudo /sbin/chkconfig --list anacron | grep ":on"
+}}}
+
+[] Disable atd service
+{{{
+sudo /sbin/chkconfig --list atd
+sudo /sbin/chkconfig --level 345 atd off
+sudo /sbin/chkconfig --list atd | grep ":on"
+}}}
+
+[] Disable crond service
+{{{
+sudo /sbin/chkconfig --list crond
+sudo /sbin/chkconfig --level 2345 crond off
+sudo /sbin/chkconfig --list crond | grep ":on"
+}}}
+
+[] Disable mysql service
+{{{
+sudo nano -w /etc/rc.local
+}}}
+
+comment out
+{{{
+/etc/init.d/mysqld start
+}}}
+
+[] Disable Nagios NRPE client service
+{{{
+sudo /sbin/chkconfig --list nrpe
+sudo /sbin/chkconfig --level 345 nrpe off
+sudo /sbin/chkconfig --list nrpe | grep ":on"
+}}}
+
+[] Disable sendmail service
+{{{
+sudo /sbin/chkconfig --list sendmail
+sudo /sbin/chkconfig --level 2345 sendmail off
+sudo /sbin/chkconfig --list sendmail | grep ":on"
+}}}
+
+[] Disable unijob service
+{{{
+sudo /sbin/chkconfig --list unijob
+sudo /sbin/chkconfig --level 345 unijob off
+sudo /sbin/chkconfig --list unijob | grep ":on"
+}}}
+
+[] Restart server
+{{{
+sudo /sbin/reboot
+}}}
+
+[] Run spot checks post reboot
+{{{
+ps auxw | grep anacron
+ps auxw | grep atd
+ps auxw | grep crond
+ps auxw | grep mysql
+ps auxw | grep nrpe
+ps auxw | grep sendmail
+ps auxw | grep -i unijob
+}}}
+
+[] Shutdown the clone machine
+{{{
+sudo /sbin/shutdown -h now
+}}}
+
+== Storyboard: Migrate VmWare VM to AWS AMI using SMS ==
+
+[] Login in to AWS console
+
+[] Navigate to "Server Migration Service"
+
+[] Click on "Servers" sidebar section
+
+[] Click "Re-import server catalog" button
+
+[] Search for "ncspral27-aws-clone", select it and click "Create Replication Job" button
+
+[] on "Step 1: Select the servers" click "Next" button
+
+[] on "Step 2: Configure server-specific settings" click Next
+
+[] on "Step 3: Configure replication job settings" enter/select following in the fields
+{{{
+One-time migration
+Description: ncspral27-aws-clone
+}}}
+click "Next" button
+
+[] on "Step 4: Review" verify all the configuration and click "Create" button
+
+[] on "Creation status" click "View replication jobs"
+
+[] Wait around of time mentioned in "SMS Migration time" section
+
+
+== Storyboard: Copy migrated AMI to new AMI ==
+
+Note: so it can be named better
+
+[] Navigate to AWS EC2 AMI and name the migrated AMI to
+{{{
+ncspral27-aws-clone
+}}}
+
+TODO: UPDATE WITH CORRECT DISKS
+[] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the migrated AMI
+{{{
+1GB:    ncspral27-aws-clone-boot
+160GB:  ncspral27-aws-clone-root
+64.5GB: ncspral27-aws-clone-fio
+}}}
+
+[] Navigate to AWS EC2 AMI and copy ncspral27-aws-clone AMI enter/select following values into the field
+{{{
+Destination region: US East (North Virginia)
+Name: ncspral27
+Description: ncspral27
+}}}
+and click "Copy AMI"
+
+Then wait for 5-15 min for AMI to copy, you will need to refresh the screen
+
+[] Name the newly copied AMI
+{{{
+Name: ncspral27
+Description: ncspral27
+}}}
+
+TODO: UPDATE WITH CORRECT DISKS
+[] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the newly copied AMI
+{{{
+100MB:   ncspral27-ami-boot
+160GB:   ncspral27-ami-root
+64.5GB:  ncspral27-ami-fio
+}}}
+
+[] Navigate to AWS EC2 AMI and "Deregister" (delete) the "ncspral27-aws-clone" AMI
+
+[] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral27-aws-clone-*
+
+== Storyboad: Create AWS EC2 Instance ==
+
+[] Navigate to AWS EC2 Instances and click "Launch Instance"
+
+[] On "Step 1: Choose an Amazon Machine Image (AMI)" step click "My AMIs" then select "ncspral27" AMI and click "Select"
+
+[] On "Step 2: Choose an Instance Type" select "r4.xlarge" and click "Next: Configure Instance Details"
+
+[] On "Step 3: Configure Instance Details" select/enter following and click "Next: Add Storage"
+
+todo: vpc, subnet, network interface ip settings will change for prod account
+
+{{{
+Number of instances: 1
+Network: vpc-0003f0f3f28282042 | NewCars-NP-East
+Subnet: subnet-0baf34a170551fefb | Cars.com-Newcars-NP web | us-east-1a
+Auto-assign Public IP: Use subnet setting (Disable)
+Placement group: ??? (need to ask adam)
+CPU options: ??? (need to ask adam)
+Enable termination protection: Protect against accidental termination
+Tenancy: ??? (need to ask adam)
+}}}
+
+Network interfaces:
+{{{
+Primary IP: 172.28.240.15
+}}}
+
+[] On "Step 4: Add Storage" select the following and click "Next: Add Tags"
+{{{
+Root Volume Type: ??? (talk to Adam) [this is actuall boot drive]
+EBS Volume Type:  ??? (talk to Adam) [this is actually root drive]
+EBS Volume Type:  ??? (talk to Adam) [this is actually fio drive with data]
+
+Root Volume Type: Delete on termination, checked
+EBS Volume Type:  Delete on termination, checked
+EBS Volume Type:  Delete on termination, checked
+}}}
+
+[] On "Step 5: Add Tags" and add following tags and click "next: Configure Security Group"
+{{{
+Key: Name
+Value: ncspral27
+Instances: checked
+Volumes: checked
+}}}
+
+[] On "Step 6: Configure Security Group" click "Select an existing security group" and click "Review and Launch"
+TODO: GET ALL SEC GROUPS
+{{{
+Cars-SM ncspral27/ncspral24 MySQL
+Cars-SM NRPE
+Cars-SM SSH
+}}}
+
+[] On "Step 7: Review Instance Launch" review all the settings and click "Launch"
+
+
+[] On "Select an existing key pair or create a new key pair" popup select "Proceed without a key pair", check the "acknowledge..." checkbox and click "Launch Instances"
+
+[] Navigatew to AWS EC2 Network interfaces and Name the network interface for the new Instance
+{{{
+ncspral27
+}}}
+
+
+iodrive-snmp-agentx 0:off 1:on  2:on  3:on  4:on  5:on  6:off
+libvirtd        0:off 1:off 2:off 3:off 4:on  5:on  6:off
+xend            0:off 1:off 2:on  3:off 4:on  5:on  6:off
+xendomains      0:off 1:off 2:off 3:off 4:on  5:on  6:off
+
+
+unijob          0:off 1:off 2:off 3:on  4:on  5:on  6:off
+mysqld
