@@ -15,7 +15,7 @@ VmWare:
     * swap: 6GB
 
 SMS migration time:
- - TBD
+ - 6hr (guess)
 
 AWS EC2 Instance:
 - type: r4.xlarge (update to r4.2xlarge if issues arise)
