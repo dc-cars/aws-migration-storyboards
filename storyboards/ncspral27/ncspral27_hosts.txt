@@ -28,3 +28,14 @@ do \
   echo ""; \
 done
 }}}
+
+
+= ncspral5 =
+
+172.20.89.57  bar.newcars.com
+172.20.89.57  leaddb1.newcars.com
+
+= ncspral20 =
+
+172.20.89.57  leaddb1.newcars.com
+
