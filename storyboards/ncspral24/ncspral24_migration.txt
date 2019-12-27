@@ -256,9 +256,9 @@ Root Volume Type: ??? (talk to Adam) [this is actuall boot drive]
 EBS Volume Type:  ??? (talk to Adam) [this is actually root drive]
 EBS Volume Type:  ??? (talk to Adam) [this is actually fio drive with data]
 
-Root Volume Type: Delete on termination, checked
-EBS Volume Type:  Delete on termination, checked
-EBS Volume Type:  Delete on termination, checked
+Root Volume Type: Delete on termination, unchecked
+EBS Volume Type:  Delete on termination, unchecked
+EBS Volume Type:  Delete on termination, unchecked
 }}}
 
 [] On "Step 5: Add Tags" and add following tags and click "next: Configure Security Group"
