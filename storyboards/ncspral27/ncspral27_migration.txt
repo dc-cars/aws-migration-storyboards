@@ -50,7 +50,7 @@ sudo /sbin/shutdown -h now
 
 [] Start ncspral27 vm (non clone)
 
-[] Check ncspral27 vm for correct running services (mysql)
+[] Check ncspral27 vm for correct running services
 {{{
 ps auxw | grep anacron
 ps auxw | grep atd
@@ -270,13 +270,13 @@ Primary IP: 172.28.240.15
 
 [] On "Step 4: Add Storage" select the following and click "Next: Add Tags"
 {{{
-Root Volume Type: ??? (talk to Adam) [this is actuall boot drive]
+Root Volume Type: ??? (talk to Adam) [this is actually boot drive]
 EBS Volume Type:  ??? (talk to Adam) [this is actually root drive]
 EBS Volume Type:  ??? (talk to Adam) [this is actually fio drive with data]
 
-Root Volume Type: Delete on termination, checked
-EBS Volume Type:  Delete on termination, checked
-EBS Volume Type:  Delete on termination, checked
+Root Volume Type: Delete on termination, unchecked
+EBS Volume Type:  Delete on termination, unchecked
+EBS Volume Type:  Delete on termination, unchecked
 }}}
 
 [] On "Step 5: Add Tags" and add following tags and click "next: Configure Security Group"
@@ -298,15 +298,7 @@ Cars-SM SSH
 
 [] On "Select an existing key pair or create a new key pair" popup select "Proceed without a key pair", check the "acknowledge..." checkbox and click "Launch Instances"
 
-[] Navigatew to AWS EC2 Network interfaces and Name the network interface for the new Instance
+[] Navigate to AWS EC2 Network interfaces and Name the network interface for the new Instance
 {{{
 ncspral27
 }}}
-
-# physical machine driver (for HP)
-iodrive-snmp-agentx 0:off 1:on  2:on  3:on  4:on  5:on  6:off
-
-#virtualization libraries?
-libvirtd        0:off 1:off 2:off 3:off 4:on  5:on  6:off
-xend            0:off 1:off 2:on  3:off 4:on  5:on  6:off
-xendomains      0:off 1:off 2:off 3:off 4:on  5:on  6:off
