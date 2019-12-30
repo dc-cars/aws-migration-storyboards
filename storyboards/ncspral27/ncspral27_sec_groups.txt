@@ -1,0 +1,10 @@
+$ sudo netstat -plnt
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address               Foreign Address             State       PID/Program name
+tcp        0      0 0.0.0.0:5666                0.0.0.0:*                   LISTEN      3618/nrpe
+tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN      3788/mysqld
+tcp        0      0 0.0.0.0:10641               0.0.0.0:*                   LISTEN      3704/uniio
+tcp        0      0 0.0.0.0:10642               0.0.0.0:*                   LISTEN      3722/unicdj
+tcp        0      0 0.0.0.0:10643               0.0.0.0:*                   LISTEN      3758/unical
+tcp        0      0 127.0.0.1:25                0.0.0.0:*                   LISTEN      3644/sendmail: acce
+tcp        0      0 :::22                       :::*                        LISTEN      3566/sshd
