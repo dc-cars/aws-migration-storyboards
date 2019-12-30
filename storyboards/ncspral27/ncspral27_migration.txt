@@ -250,12 +250,23 @@ Description: ncspral27
 
 [] On "Step 3: Configure Instance Details" select/enter following and click "Next: Add Storage"
 
-todo: vpc, subnet, network interface ip settings will change for prod account
-
+NP config
 {{{
 Number of instances: 1
 Network: vpc-0003f0f3f28282042 | NewCars-NP-East
 Subnet: subnet-0baf34a170551fefb | Cars.com-Newcars-NP web | us-east-1a
+Auto-assign Public IP: Use subnet setting (Disable)
+Placement group: ??? (need to ask adam)
+CPU options: ??? (need to ask adam)
+Enable termination protection: Protect against accidental termination
+Tenancy: ??? (need to ask adam)
+}}}
+
+PROD config:
+{{{
+Number of instances: 1
+Network: vpc-0ddfa4a49d23118dc | Newcars-Prod-East
+Subnet: subnet-0b6106485c4ade9bf | cars-sm-prod-web-us-east-1a
 Auto-assign Public IP: Use subnet setting (Disable)
 Placement group: ??? (need to ask adam)
 CPU options: ??? (need to ask adam)
@@ -288,9 +299,11 @@ Volumes: checked
 }}}
 
 [] On "Step 6: Configure Security Group" click "Select an existing security group" and click "Review and Launch"
-TODO: GET ALL SEC GROUPS
 {{{
+Cars-SM MySQL
+Cars-SM NRPE
 Cars-SM SSH
+Cars-SM Unijob client
 }}}
 
 [] On "Step 7: Review Instance Launch" review all the settings and click "Launch"
