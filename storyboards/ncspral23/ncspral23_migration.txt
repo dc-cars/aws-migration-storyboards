@@ -367,6 +367,10 @@ sudo /sbin/reboot
 
 [] Check System Log for errors
 
+[] Check hostname is correct
+{{{
+hostname
+}}}
 
 == Storyboard: Route 53 DNS Updates ==
 

@@ -272,7 +272,9 @@ Volumes: checked
 [] On "Step 6: Configure Security Group" click "Select an existing security group" and click "Review and Launch"
 TODO: need additional groups that allow access to multiple mysql ports on this machine
 {{{
-Cars-SM Default
+Cars-SM ncspral23/ncspral24 MySQL
+Cars-SM NRPE
+Cars-SM SSH
 }}}
 
 [] On "Step 7: Review Instance Launch" review all the settings and click "Launch"
@@ -345,38 +347,71 @@ sudo /sbin/reboot
 
 [] Check System Log for errors
 
+[] Check hostname is correct
+{{{
+hostname
+}}}
 
-== Storyboard: Assign Security groups ==
+== Storyboard: Route 53 DNS Updates ==
 
-[] TODO: ncspral24 group
+[] Add PTR record for ncspral24
 
-
-== Storyboard: Delete VmWare clone ==
-
-[] Login to VmWare console
-
-[] Navigate to ncspral24-aws-clone
-
-[] Delete from disk ncspral24-aws-clone
-
-
-== Storyboard: Re-activate services ==
-
-[] TODO: activate services deactivated previously
+[] update DNS record for ncspral24.srv.nchub.net to 172.28.240.14
 
 
 == Storyboard: BigIP Updates ==
 
-[] TODO: Update BigIP configs
+[] Refer to ncspral24_bigip.txt
 
 
-== Storyboard: DNS Updates ==
+== Storyboard: Re-activate services ==
 
-[] update DNS record for ncspral24.srv.nchub.net to 172.28.240.14
+[] Enable anacron service
+{{{
+sudo /sbin/chkconfig --list anacron
+sudo /sbin/chkconfig --level 245 anacron on
+sudo /sbin/chkconfig --list anacron
+}}}
 
-[] TODO: Update DNS for server
+[] Enable atd service
+{{{
+sudo /sbin/chkconfig --list atd
+sudo /sbin/chkconfig --level 45 atd on
+sudo /sbin/chkconfig --list atd
+}}}
 
+[] Enable crond service
+{{{
+sudo /sbin/chkconfig --list crond
+sudo /sbin/chkconfig --level 2345 crond on
+sudo /sbin/chkconfig --list crond
+}}}
 
-== Storyboard: Host File Updates ==
+[] Enable mysql service
+{{{
+sudo emacs /etc/rc.local
+}}}
 
-[] TODO: Modify host files that refer to the server
+uncomment
+{{{
+/etc/init.d/mysqld start
+}}}
+
+[] Enable Nagios NRPE client service
+{{{
+sudo /sbin/chkconfig --list nrpe
+sudo /sbin/chkconfig --level 345 nrpe on
+sudo /sbin/chkconfig --list nrpe
+}}}
+
+[] Enable sendmail service
+{{{
+sudo /sbin/chkconfig --list sendmail
+sudo /sbin/chkconfig --level 2345 sendmail on
+sudo /sbin/chkconfig --list sendmail
+}}}
+
+[] Restart server
+{{{
+sudo /sbin/reboot
+}}}
