@@ -63,7 +63,25 @@ sudo /sbin/shutdown -h now
 
 == Storyboard: Remove Swap ==
 
-[] TODO: remove swap
+[x] Check swap is present
+{{{
+/sbin/swapon -s
+}}}
+
+[x] Comment out this line from /etc/fstab
+{{{
+/dev/VolGroup00/LogVol01        swap        swap        defaults        0 0
+}}}
+
+[x] Reboot server
+{{{
+sudo /sbin/reboot
+}}}
+
+[x] Check that swap partition is not present
+{{{
+/sbin/swapon -s
+}}}
 
 
 == Storyboard: Disable services ==
@@ -218,10 +236,6 @@ Description: ncspral24
 [] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral24-aws-clone-*
 
 
-== Storyboard: Add security groups ==
- [] TODO
-
-
 == Storyboad: Create AWS EC2 Instance ==
 
 [] Navigate to AWS EC2 Instances and click "Launch Instance"
@@ -236,8 +250,8 @@ todo: vpc, subnet, network interface ip settings will change for prod account
 
 {{{
 Number of instances: 1
-Network: vpc-0003f0f3f28282042 | NewCars-NP-East
-Subnet: subnet-0baf34a170551fefb | Cars.com-Newcars-NP web | us-east-1a
+Network: vpc-0ddfa4a49d23118dc | Newcars-Prod-East
+Subnet: subnet-0b6106485c4ade9bf | cars-sm-prod-web-us-east-1a
 Auto-assign Public IP: Use subnet setting (Disable)
 Placement group: ??? (need to ask adam)
 CPU options: ??? (need to ask adam)
@@ -270,10 +284,10 @@ Volumes: checked
 }}}
 
 [] On "Step 6: Configure Security Group" click "Select an existing security group" and click "Review and Launch"
-TODO: need additional groups that allow access to multiple mysql ports on this machine
 {{{
 Cars-SM ncspral23/ncspral24 MySQL
 Cars-SM NRPE
+Cars-SM Ping
 Cars-SM SSH
 }}}
 
@@ -295,7 +309,7 @@ ssh \
   -o UserKnownHostsFile=/dev/null \
   -o StrictHostKeyChecking=no \
   -o LogLevel=ERROR \
-  mryabushkin@172.28.240.14 \
+  jlee@172.28.240.14 \
 ;
 }}}
 
@@ -309,7 +323,6 @@ ps auxw | grep nbclient
 ps auxw | grep nrpe
 ps auxw | grep sendmail
 }}}
-
 
 
 == Storyboard: Updated machine networking ==
@@ -328,16 +341,16 @@ HOSTNAME=ncspral24.classifiedventures.com
 {{{
 sudo nano -w /etc/hosts
 }}}
-comment out old ip
+replace old ip with new ip
 {{{
-#172.20.89.54           ncspral24.classifiedventures.com ncspral24
+# remove this ip
+172.20.89.54           ncspral24.classifiedventures.com ncspral24
 }}}
-add new ip
 {{{
+# add this ip
 172.28.240.14           ncspral24.classifiedventures.com ncspral24
 }}}
 
-TODO: more greps for IP
 
 
 [] Reboot the machine
