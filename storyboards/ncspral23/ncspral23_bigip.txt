@@ -59,43 +59,6 @@ export DB_NAME="newcars";
 || echo -e "\n${FAILURE_COLOR}FAILURE: did not connect to database${RESET_COLOR}\n"
 }}}
 
-
-=== VIP: cps.repl.db.newcars.com / Pool: cps_repl_db_pool ===
-
-[] Locate following VIP/Pool
-{{{
-- VIP: cps.repl.db.newcars.com
-  - Pool: cps_repl_db_pool
-    - Pool member: 172.20.89.53:3008
-      - State: Offline (Disabled) - Forced down
-}}}
-
-[] Navigate to Pool members
-
-[] Remove old Pool member: 172.20.89.53:3008
-
-[] Add new Pool member: 172.28.240.13:3008
-
-[] Wait until status is: Offline (Disabled) - Forced down
-
-=== VIP: leads.repl.db.newcars.com / Pool: newcars_leads.repl.db-1 ===
-
-[] Locate following VIP/Pool
-{{{
-- VIP: leads.repl.db.newcars.com
-  - Pool: newcars_leads.repl.db-1
-    - Pool member: 172.20.89.53:3306
-      - State: Offline (Disabled) - Forced down
-}}}
-
-[] Navigate to Pool members
-
-[] Remove old Pool member: 172.20.89.53:3306
-
-[] Add new Pool member: 172.28.240.13:3306
-
-[] Wait until status is: Offline (Disabled) - Forced down
-
 === VIP: nc.repl.db.newcars.com / Pool: nc_repl_db_pool ===
 
 [] Locate following VIP/Pool
@@ -136,20 +99,3 @@ export DB_NAME="nc";
 ) \
 || echo -e "\n${FAILURE_COLOR}FAILURE: did not connect to database${RESET_COLOR}\n"
 }}}
-
-=== VIP: wps.repl.db.newcars.com / Pool: wps_repl_db_pool ===
-
-[] Locate following VIP/Pool
-{{{
-- VIP: wps.repl.db.newcars.com
-  - Pool: wps_repl_db_pool
-    - Pool member: 172.20.89.53:3007
-      - State: Offline (Disabled) - Forced down
-}}}
-[] Navigate to Pool members
-
-[] Remove old Pool member: 172.20.89.53:3007
-
-[] Add new Pool member: 172.28.240.13:3007
-
-[] Wait until status is: Offline (Disabled) - Forced down
