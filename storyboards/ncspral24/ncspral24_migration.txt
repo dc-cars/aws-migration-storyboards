@@ -370,6 +370,9 @@ hostname
 
 [x] Refer to ncspral24_bigip.txt
 
+== Storyboard: Update IP address of ncspral24 in Nagios ==
+
+[] Ask Michael to update the IP to 172.28.240.14
 
 == Storyboard: Re-activate services ==
 
