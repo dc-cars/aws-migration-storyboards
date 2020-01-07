@@ -17,25 +17,6 @@ ncspral24
 
 [] Login to BigIP F5
 
-
-=== VIP: admin.repl.db.newcars.com / Pool: newcars_admin.repl.db-1 ===
-
-[] Locate following VIP/Pool
-{{{
-- VIP: admin.repl.db.newcars.com
-  - Pool: newcars_admin.repl.db-1
-    - Pool member: 172.20.89.54:3013
-      - State: Offline (Disabled) - Forced down
-}}}
-
-[] Navigate to Pool members
-
-[] Remove old Pool member: 172.20.89.54:3013
-
-[] Add new Pool member: 172.28.240.14:3013
-
-[] Wait until the status is: Offline (Disabled) - Forced down
-
 === VIP: cps.repl.db.newcars.com / Pool: cps_repl_db_pool ===
 
 [] Locate following VIP/Pool
@@ -119,24 +100,6 @@ export DB_NAME="leads";
 || echo -e "\n${FAILURE_COLOR}FAILURE: did not connect to database${RESET_COLOR}\n"
 }}}
 
-
-=== VIP: nc.repl.db.newcars.com / Pool: nc_repl_db_pool ===
-
-[] Locate following VIP/Pool
-{{{
-- VIP: nc.repl.db.newcars.com
-  - Pool: nc_repl_db_pool
-    - Pool member: 172.20.89.54:3009
-      - State: Offline (Disabled) - Forced down
-}}}
-
-[] Navigate to Pool members
-
-[] Remove old Pool member: 172.20.89.54:3009
-
-[] Add new Pool member: 172.28.240.14:3009
-
-[] Wait until status is: Offline (Disabled) - Forced down
 
 === VIP: new-semi.repl.db.newcars.com / Pool: newcars_new-semi.repl.db-1 ===
 
