@@ -15,7 +15,7 @@ ncspral24
    export RESET_COLOR=$(echo -e "\e[0m");
 }}}
 
-[] Login to BigIP F5
+[x] Login to BigIP F5
 
 === VIP: cps.repl.db.newcars.com / Pool: cps_repl_db_pool ===
 
@@ -27,15 +27,15 @@ ncspral24
       - State: Available (Enabled) - Pool member is available
 }}}
 
-[] Navigate to Pool members
+[x] Navigate to Pool members
 
-[] Remove old Pool member: 172.20.89.54:3008
+[x] Remove old Pool member: 172.20.89.54:3008
 
-[] Add new Pool member: 172.28.240.14:3008
+[x] Add new Pool member: 172.28.240.14:3008
 
-[] Wait until status is: Available (Enabled) - Pool member is available
+[x] Wait until status is: Available (Enabled) - Pool member is available
 
-[] Test access to the new server VIP (use mariadb mysql client)
+[x] Test access to the new server VIP (use mariadb mysql client)
 {{{
 export DB_HOST="cps.repl.db.newcars.com";
 export DB_NAME="cps";
@@ -61,7 +61,7 @@ export DB_NAME="cps";
 
 === VIP: leads.repl.db.newcars.com / Pool: newcars_leads.repl.db-1 ===
 
-[] Locate following VIP/Pool
+[x] Locate following VIP/Pool
 {{{
 - VIP: leads.repl.db.newcars.com
   - Pool: newcars_leads.repl.db-1
@@ -69,15 +69,15 @@ export DB_NAME="cps";
       - State: Available (Enabled) - Pool member is available
 }}}
 
-[] Navigate to Pool members
+[x] Navigate to Pool members
 
-[] Remove old Pool member: 172.20.89.54:3306
+[x] Remove old Pool member: 172.20.89.54:3306
 
-[] Add new Pool member: 172.28.240.14:3306
+[x] Add new Pool member: 172.28.240.14:3306
 
-[] Wait until status is: Available (Enabled) - Pool member is available
+[x] Wait until status is: Available (Enabled) - Pool member is available
 
-[] Test access to the new server VIP (use mariadb mysql client)
+[x] Test access to the new server VIP (use mariadb mysql client)
 {{{
 export DB_HOST="leads.repl.db.newcars.com";
 export DB_NAME="leads";
@@ -103,7 +103,7 @@ export DB_NAME="leads";
 
 === VIP: new-semi.repl.db.newcars.com / Pool: newcars_new-semi.repl.db-1 ===
 
-[] Locate following VIP/Pool
+[x] Locate following VIP/Pool
 {{{
 - VIP: new-semi.repl.db.newcars.com
   - Pool: newcars_new-semi.repl.db-1
@@ -111,15 +111,15 @@ export DB_NAME="leads";
       - State: Available (Enabled) - Pool member is available
 }}}
 
-[] Navigate to Pool members
+[x] Navigate to Pool members
 
-[] Remove old Pool member: 172.20.89.54:3020
+[x] Remove old Pool member: 172.20.89.54:3020
 
-[] Add new Pool member: 172.20.89.54:3020
+[x] Add new Pool member: 172.20.89.54:3020
 
-[] Wait until status is: Available (Enabled) - Pool member is available
+[x] Wait until status is: Available (Enabled) - Pool member is available
 
-[] Test access to the new server VIP (use mariadb mysql client)
+[x] Test access to the new server VIP (use mariadb mysql client)
 {{{
 export DB_HOST="new-semi.repl.db.newcars.com";
 export DB_NAME="semi";
@@ -145,7 +145,7 @@ export DB_NAME="semi";
 
 === VIP: old-semi.repl.db.newcars.com / Pool: newcars_old-semi.repl.db-1 ===
 
-[] Locate following VIP/Pool
+[x] Locate following VIP/Pool
 {{{
 - VIP: old-semi.repl.db.newcars.com
   - Pool: newcars_old-semi.repl.db-1
@@ -153,15 +153,15 @@ export DB_NAME="semi";
       - State: Available (Enabled) - Pool member is available
 }}}
 
-[] Navigate to Pool members
+[x] Navigate to Pool members
 
-[] Remove old Pool member: 172.20.89.54:3014
+[x] Remove old Pool member: 172.20.89.54:3014
 
-[] Add new Pool member: 172.28.240.14:3014
+[x] Add new Pool member: 172.28.240.14:3014
 
-[] Wait until status is: Available (Enabled) - Pool member is available
+[x] Wait until status is: Available (Enabled) - Pool member is available
 
-[] Test access to the new server VIP (use mariadb mysql client)
+[x] Test access to the new server VIP (use mariadb mysql client)
 {{{
 export DB_HOST="old-semi.repl.db.newcars.com";
 export DB_NAME="semi";
@@ -187,22 +187,22 @@ export DB_NAME="semi";
 
 === VIP: wps.repl.db.newcars.com / Pool: wps_repl_db_pool ===
 
-[] Locate following VIP/Pool
+[x] Locate following VIP/Pool
 {{{
 - VIP: wps.repl.db.newcars.com
   - Pool: wps_repl_db_pool
     - Pool member: 172.20.89.54:3007
       - State: Available (Enabled) - Pool member is available
 }}}
-[] Navigate to Pool members
+[x] Navigate to Pool members
 
-[] Remove old Pool member: 172.20.89.54:3007
+[x] Remove old Pool member: 172.20.89.54:3007
 
-[] Add new Pool member: 172.28.240.14:3007
+[x] Add new Pool member: 172.28.240.14:3007
 
-[] Wait until status is: Available (Enabled) - Pool member is available
+[x] Wait until status is: Available (Enabled) - Pool member is available
 
-[] Test access to the new server VIP (use mariadb mysql client)
+[x] Test access to the new server VIP (use mariadb mysql client)
 {{{
 export DB_HOST="wps.repl.db.newcars.com";
 export DB_NAME="wps";
