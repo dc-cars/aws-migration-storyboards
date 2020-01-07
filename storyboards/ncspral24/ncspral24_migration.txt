@@ -372,32 +372,32 @@ hostname
 
 == Storyboard: Update IP address of ncspral24 in Nagios ==
 
-[] Ask Michael to update the IP to 172.28.240.14
+[x] Ask Michael to update the IP to 172.28.240.14
 
 == Storyboard: Re-activate services ==
 
-[] Enable anacron service
+[x] Enable anacron service
 {{{
 sudo /sbin/chkconfig --list anacron
 sudo /sbin/chkconfig --level 245 anacron on
 sudo /sbin/chkconfig --list anacron
 }}}
 
-[] Enable atd service
+[x] Enable atd service
 {{{
 sudo /sbin/chkconfig --list atd
 sudo /sbin/chkconfig --level 45 atd on
 sudo /sbin/chkconfig --list atd
 }}}
 
-[] Enable crond service
+[x] Enable crond service
 {{{
 sudo /sbin/chkconfig --list crond
 sudo /sbin/chkconfig --level 2345 crond on
 sudo /sbin/chkconfig --list crond
 }}}
 
-[] Enable mysql service
+[x] Enable mysql service
 {{{
 sudo emacs /etc/rc.local
 }}}
@@ -407,21 +407,21 @@ uncomment
 /etc/init.d/mysqld start
 }}}
 
-[] Enable Nagios NRPE client service
+[x] Enable Nagios NRPE client service
 {{{
 sudo /sbin/chkconfig --list nrpe
 sudo /sbin/chkconfig --level 345 nrpe on
 sudo /sbin/chkconfig --list nrpe
 }}}
 
-[] Enable sendmail service
+[x] Enable sendmail service
 {{{
 sudo /sbin/chkconfig --list sendmail
 sudo /sbin/chkconfig --level 2345 sendmail on
 sudo /sbin/chkconfig --list sendmail
 }}}
 
-[] Restart server
+[x] Restart server
 {{{
 sudo /sbin/reboot
 }}}
