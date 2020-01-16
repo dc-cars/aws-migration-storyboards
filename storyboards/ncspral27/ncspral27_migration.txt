@@ -91,7 +91,6 @@ sudo /sbin/reboot
 
 == Storyboard: Disable services ==
 
-
 Note: done so two running clone do mess with the infrastructure
 
 [] Disable anacron service
@@ -314,4 +313,152 @@ Cars-SM Unijob client
 [] Navigate to AWS EC2 Network interfaces and Name the network interface for the new Instance
 {{{
 ncspral27
+}}}
+
+== Storyboard: Post first launch checks ==
+
+[]
+{{{
+ssh \
+  -o UserKnownHostsFile=/dev/null \
+  -o StrictHostKeyChecking=no \
+  -o LogLevel=ERROR \
+  dchun@172.28.240.15 \
+;
+}}}
+
+[] Run spot checks post reboot
+{{{
+ps auxw | grep anacron
+ps auxw | grep crond
+ps auxw | grep httpd
+ps auxw | grep mysql
+ps auxw | grep nbclient
+ps auxw | grep nrpe
+ps auxw | grep sendmail
+ps auxw | grep UNIJOB
+}}}
+
+
+== Storyboard: Updated machine networking ==
+
+[] Force hostname for new Instance
+{{{
+sudo nano -w /etc/sysconfig/network
+}}}
+append
+{{{
+HOSTNAME=ncspral27.classifiedventures.com
+}}}
+
+
+[] Update /etc/hosts to new IP
+{{{
+sudo nano -w /etc/hosts
+}}}
+comment out old ip
+{{{
+#172.20.89.57           ncspral27.classifiedventures.com ncspral27
+}}}
+add new ip
+{{{
+172.28.240.15           ncspral27.classifiedventures.com ncspral27
+}}}
+
+
+[] Reboot the machine
+{{{
+sudo /sbin/reboot
+}}}
+
+[] Check System Log for errors
+
+[] Check that the hostname has change
+{{{
+hostname
+}}}
+
+== Storyboard: Update Nagios ==
+[] Update IP for ncspral27 entry in Nagios to 172.28.240.15 (Michael)
+
+== Storyboard: Route 53 DNS Updates ==
+
+[] update DNS record for ncspral27.srv.nchub.net to 172.28.240.15
+    NOTE: PTR record is already created in Route 53 for this server
+
+== Storyboard: Update /etc/hosts in legacy servers ==
+[] Refer to ncspral27_hosts.txt for storyboard
+
+== Storyboard: BigIP Updates ==
+
+[] Refer to ncspral27_bigip.txt for storyboard
+
+== Storyboard: Re-activate services ==
+
+[] Enable anacron service
+{{{
+sudo /sbin/chkconfig --list anacron
+sudo /sbin/chkconfig --level 2345 anacron on
+sudo /sbin/chkconfig --list anacron
+}}}
+
+[] Enable atd service
+{{{
+sudo /sbin/chkconfig --list atd
+sudo /sbin/chkconfig --level 345 atd on
+sudo /sbin/chkconfig --list atd
+}}}
+
+[] Enable crond service
+{{{
+sudo /sbin/chkconfig --list crond
+sudo /sbin/chkconfig --level 2345 crond on
+sudo /sbin/chkconfig --list crond
+}}}
+
+[] Enable mysql service
+{{{
+sudo nano -w /etc/rc.local
+}}}
+
+uncomment
+{{{
+#/etc/init.d/mysqld start
+}}}
+
+[] Enable Nagios NRPE client service
+{{{
+sudo /sbin/chkconfig --list nrpe
+sudo /sbin/chkconfig --level 345 nrpe on
+sudo /sbin/chkconfig --list nrpe
+}}}
+
+[] Enable sendmail service
+{{{
+sudo /sbin/chkconfig --list sendmail
+sudo /sbin/chkconfig --level 2345 sendmail on
+sudo /sbin/chkconfig --list sendmail
+}}}
+
+[] Enable unijob service
+{{{
+sudo /sbin/chkconfig --list unijob
+sudo /sbin/chkconfig --level 345 unijob on
+sudo /sbin/chkconfig --list unijob
+}}}
+
+[] Restart server
+{{{
+sudo /sbin/reboot
+}}}
+
+[] Run spot checks post reboot
+{{{
+ps auxw | grep anacron
+ps auxw | grep atd
+ps auxw | grep crond
+ps auxw | grep mysql
+ps auxw | grep nrpe
+ps auxw | grep sendmail
+ps auxw | grep -i unijob
 }}}
