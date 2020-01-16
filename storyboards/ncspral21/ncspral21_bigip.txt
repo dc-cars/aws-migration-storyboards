@@ -1,0 +1,105 @@
+ncspral21
+=========
+
+== Storyboard: Update BigIP VIPs to use AWS instance ==
+
+[] Open local terminal
+
+[] Export "cron" user password we use for checks
+{{{
+   export CRON_MYSQL_PW=<reducted>;
+
+   export FAILURE_COLOR=$(echo -e "\e[1;41m");
+   export SUCCESS_COLOR=$(echo -e "\e[1;42m");
+   export RESET_COLOR=$(echo -e "\e[0m");
+}}}
+
+[] Login to BigIP F5
+
+
+TODO:
+  - ask about cps db host VIP missing
+  - ask about what db name to use for check
+
+=== VIP: nc.prod.db.newcars.com / Pool: newcars_nc.prod.db-1 ===
+
+[] Locate following VIP/Pool
+{{{
+- VIP: nc.prod.db.newcars.com
+  - Pool: newcars_nc.prod.db-1
+    - Pool member: 172.20.89.47:3306
+      - State: Available (Enabled) - Pool member is available
+}}}
+
+[] Navigate to Pool members
+
+[] Remove old Pool member: 172.20.89.47:3306
+
+[] Add new Pool member: 172.28.240.12:3306
+
+[] Wait until the status is: Available (Enabled) - Pool member is available
+
+[] Test access to the new server via VIP (use mariadb mysql client)
+{{{
+export DB_HOST="nc.prod.db.newcars.com";
+export DB_NAME="nc";
+( \
+  [ \
+    "$(mysql \
+     --host="${DB_HOST}" \
+     --port=3306 \
+     --database="${DB_NAME}" \
+     --user=cron \
+     --password="${CRON_MYSQL_PW}" \
+     --skip-auto-rehash \
+     --skip-column-names \
+     --batch \
+     --execute="select database();" \
+    )" == "${DB_NAME}" \
+  ] \
+  && echo -e "\n${SUCCESS_COLOR}SUCCESS: connection successful${RESET_COLOR}\n"; \
+) \
+|| echo -e "\n${FAILURE_COLOR}FAILURE: did not connect to database${RESET_COLOR}\n"
+}}}
+
+
+=== VIP: wps.prod.db.newcars.com / Pool: newcars_wps.prod.db-1 ===
+
+[] Locate following VIP/Pool
+{{{
+- VIP: wps.prod.db.newcars.com
+  - Pool: newcars_wps.prod.db-1
+    - Pool member: 172.20.89.47:3307
+      - State: Available (Enabled) - Pool member is available
+}}}
+
+[] Navigate to Pool members
+
+[] Remove old Pool member: 172.20.89.47:3307
+
+[] Add new Pool member: 172.28.240.12:3307
+
+[] Wait until status is: Available (Enabled) - Pool member is available
+
+[] Test access to the new server VIP (use mariadb mysql client)
+{{{
+export DB_HOST="wps.prod.db.newcars.com";
+export DB_NAME="wps";
+( \
+  [ \
+    "$(mysql \
+     --host="${DB_HOST}" \
+     --port=3306 \
+     --database="${DB_NAME}" \
+     --user=cron \
+     --password="${CRON_MYSQL_PW}" \
+     --skip-auto-rehash \
+     --skip-column-names \
+     --batch \
+     --execute="select database();" \
+    )" == "${DB_NAME}" \
+  ] \
+  && echo -e "\n${SUCCESS_COLOR}SUCCESS: connection successful${RESET_COLOR}\n"; \
+) \
+|| echo -e "\n${FAILURE_COLOR}FAILURE: did not connect to database${RESET_COLOR}\n"
+}}}
