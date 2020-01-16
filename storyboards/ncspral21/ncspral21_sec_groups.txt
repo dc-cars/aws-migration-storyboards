@@ -1,0 +1,14 @@
+$ sudo netstat -plnt
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address               Foreign Address             State       PID/Program name
+tcp        0      0 0.0.0.0:11211               0.0.0.0:*                   LISTEN      30623/memcached
+tcp        0      0 :::11211                    :::*                        LISTEN      30623/memcached
+tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN      12092/mysqld
+tcp        0      0 0.0.0.0:3307                0.0.0.0:*                   LISTEN      12096/mysqld
+tcp        0      0 0.0.0.0:3308                0.0.0.0:*                   LISTEN      12100/mysqld
+tcp        0      0 0.0.0.0:5666                0.0.0.0:*                   LISTEN      12118/nrpe
+tcp        0      0 0.0.0.0:10643               0.0.0.0:*                   LISTEN      12506/unical
+tcp        0      0 0.0.0.0:10642               0.0.0.0:*                   LISTEN      12493/unicdj
+tcp        0      0 0.0.0.0:10641               0.0.0.0:*                   LISTEN      12476/uniio
+tcp        0      0 :::80                       :::*                        LISTEN      322/httpd
+tcp        0      0 :::22                       :::*                        LISTEN      12002/sshd
