@@ -9,11 +9,11 @@ VmWare:
 - CPU: 12
 - RAM: 64
 - Disks: 4
- * boot: 8 GB
+ * boot: 9 GB
    * swap: 7 GB
- * fio: 172 GB
- * disk1: 107 GB (TODO: check with MR)
- * root: 63 GB
+ * fio: 161 GB
+ * disk1: 101 GB (TODO: check with MR)
+ * root: 60 GB
 
 SMS migration time:
 - 4hr (estimate)
@@ -57,7 +57,6 @@ sudo /sbin/shutdown -h now
 [] Login to ncspral21-aws-clone via VmWare KVM console
 
 
-
 == Storyboard: Remove Swap ==
 
 [] Check swap is present
@@ -81,11 +80,8 @@ sudo /sbin/reboot
 }}}
 
 
-
 == Storyboard: Disable services ==
-
 TODO check:
-    arptables_jf        0:off 1:off 2:on  3:on  4:on  5:on  6:off
     memcached           0:off 1:off 2:on  3:on  4:on  5:on  6:off
     rsyncd              0:off 1:off 2:on  3:off 4:off 5:off 6:off
 
@@ -140,12 +136,17 @@ sudo /sbin/chkconfig --level 345 unijob off
 sudo /sbin/chkconfig --list unijob | grep ":on"
 }}}
 
+TODO: check
+  disable rsyncd
+  disable memcached
+
 [] Restart server
 {{{
 sudo /sbin/reboot
 }}}
 
 [] Run spot checks post reboot
+TODO: check rsyncd & memcached
 {{{
 ps auxw | grep anacron
 ps auxw | grep httpd
@@ -201,12 +202,12 @@ Note: so it can be named better
 ncspral21-aws-clone
 }}}
 
-[] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the migrated AMI
+[] Navigate to AWS EC2 Snapshots and name the 4 snapshots associate with the migrated AMI
 {{{
-8GB:   ncspral21-aws-clone-boot
-63GB:  ncspral21-aws-clone-root
-172GB: ncspral21-aws-clone-fio
-107GB: ncspral21-aws-clone-disk1 (TODO: check with MR)
+9GB:   ncspral21-aws-clone-boot
+60GB:  ncspral21-aws-clone-root
+161GB: ncspral21-aws-clone-fio
+101GB: ncspral21-aws-clone-disk1 (TODO: check with MR)
 }}}
 
 [] Navigate to AWS EC2 AMI and copy ncspral21-aws-clone AMI enter/select following values into the field
@@ -225,17 +226,17 @@ Name: ncspral21
 Description: ncspral21
 }}}
 
-[] Navigate to AWS EC2 Snapshots and name the 3 snapshots associate with the newly copied AMI
+[] Navigate to AWS EC2 Snapshots and name the 4 snapshots associate with the newly copied AMI
 {{{
-8GB:   ncspral21-ami-boot
-63GB:  ncspral21-ami-root
-172GB: ncspral21-ami-fio
-107GB: ncspral21-ami-disk1 (TODO: check with MR)
+9GB:   ncspral21-ami-boot
+60GB:  ncspral21-ami-root
+161GB: ncspral21-ami-fio
+101GB: ncspral21-ami-disk1 (TODO: check with MR)
 }}}
 
 [] Navigate to AWS EC2 AMI and "Deregister" (delete) the "ncspral21-aws-clone" AMI
 
-[] Navigate to AWS EC2 Snapshots and delete the 3 snapshots with old AMI, all named ncspral21-aws-clone-*
+[] Navigate to AWS EC2 Snapshots and delete the 4 snapshots with old AMI, all named ncspral21-aws-clone-*
 
 
 == Storyboad: Create AWS EC2 Instance ==
@@ -300,7 +301,7 @@ Cars-SM SSH
 
 [] On "Select an existing key pair or create a new key pair" popup select "Proceed without a key pair", check the "acknowledge..." checkbox and click "Launch Instances"
 
-[] Navigatew to AWS EC2 Network interfaces and Name the network interface for the new Instance
+[] Navigate to AWS EC2 Network interfaces and Name the network interface for the new Instance
 {{{
 ncspral21
 }}}
@@ -319,6 +320,7 @@ ssh \
 }}}
 
 [] Run spot checks post reboot
+TODO: check rsyncd & memcached
 {{{
 ps auxw | grep anacron
 ps auxw | grep httpd
@@ -381,6 +383,7 @@ hostname
 
 
 == Storyboard: Re-activate services ==
+TODO: check rsyncd & memcached
 
 [] Enable anacron service
 {{{
