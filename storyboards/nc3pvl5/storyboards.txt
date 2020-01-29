@@ -1,0 +1,249 @@
+== Storyboard | Add basic production setup  for nc3plv5 ==
+
+[] log into aws kraken ng (kraken-ng.nchub.net)
+{{{
+#!sh
+ssh kraken.nchub.net
+}}}
+
+
+[] setup the salt minion with its appropriate roles and environment.
+{{{
+#!sh
+sudo salt-key --accept 'nc3pvl5.srv.nchub.net'
+sudo salt 'nc3pvl5.srv.nchub.net' grains.setval environment production -v
+sudo salt 'nc3pvl5.srv.nchub.net' grains.setval roles "['legacy-pingpost', 'sensu-client']" -v
+}}}
+
+
+[] Highstate the target VM
+{{{
+#!sh
+sudo salt 'nc3pvl5.srv.nchub.net' state.highstate -v
+}}}
+
+
+[] SCP keys from your machine to nc3pvl5
+{{{
+  scp \
+    deployment-lead-system-binary-nc3pvl5_rsa_key \
+    deployment-lead-system-config-nc3pvl5_rsa_key \
+    nc3pvl5:/tmp \
+  ;
+}}}
+
+
+[] SSH into nc3pvl5
+
+
+[] Create /root/.ssh
+{{{
+sudo mkdir \
+  --parents \
+  --mode=700 \
+  /root/.ssh \
+;
+}}}
+
+
+[] Create SSH configuration
+cat << EOF | sudo tee /root/.ssh/config > /dev/null
+Host lead-system-config
+  HostName github.com
+  Port 22
+  User git
+  StrictHostKeyChecking no
+  IdentityFile ~/.ssh/deployment-lead-system-config-nc3pvl5_rsa_key
+
+Host lead-system-binary
+  HostName github.com
+  Port 22
+  User git
+  StrictHostKeyChecking no
+  IdentityFile ~/.ssh/deployment-lead-system-binary-nc3pvl5_rsa_key
+EOF
+}}}
+
+
+[] Limit /root/.ssh/config to root only
+{{{
+sudo chmod 600 /root/.ssh/config
+}}}
+
+
+[] Move copied keys to /root/.ssh
+{{{
+sudo mv \
+  /tmp/deployment-lead-system-binary-nc3pvl5_rsa_key \
+  /tmp/deployment-lead-system-config-nc3pvl5_rsa_key \
+  /root/.ssh/ \
+;
+}}}
+
+
+[] Change ownership for the ssh key files
+{{{
+sudo chown \
+  root:root \
+    /root/.ssh/deployment-lead-system-binary-nc3pvl5_rsa_key \
+    /root/.ssh/deployment-lead-system-config-nc3pvl5_rsa_key \
+;
+}}}
+
+
+[] Change permissions for the ssh key files
+{{{
+sudo chmod \
+  600 \
+    /root/.ssh/deployment-lead-system-binary-nc3pvl5_rsa_key \
+    /root/.ssh/deployment-lead-system-config-nc3pvl5_rsa_key \
+;
+}}}
+
+
+[] check git login for the ssh config entries and add host keys
+{{{
+sudo -H \
+  ssh \
+    -o StrictHostKeyChecking=no \
+    lead-system-binary \
+;
+
+sudo -H \
+  ssh \
+    -o StrictHostKeyChecking=no \
+    lead-system-config \
+;
+}}}
+
+
+[] Create /cars/source folder
+{{{
+sudo mkdir \
+  --parents \
+  /cars/source \
+;
+}}}
+
+
+[] Clone lead-system-binary repository
+{{{
+sudo \
+  -H \
+  -u root \
+  -g ops \
+  -- \
+    git \
+      clone \
+      lead-system-binary:cars-sm/lead-system-binary.git \
+      "/cars/source/lead-system-binary" \
+;
+}}}
+
+
+[] Clone lead-system-config repository
+{{{
+sudo \
+  -H \
+  -u root \
+  -g ops \
+  -- \
+    git \
+      clone \
+      lead-system-config:cars-sm/lead-system-config.git \
+      "/cars/source/lead-system-config" \
+      -b new-configuration \
+;
+}}}
+
+
+[] Set "production" environment
+{{{
+echo "production" | sudo tee /cars/source/lead-system-config/environment-name
+}}}
+
+
+[] Install system packages
+{{{
+  /cars/source/lead-system-config/setup.sh \
+    --environment-name production \
+  ;
+}}}
+
+
+[] Deploy configuration and application
+{{{
+  /cars/source/lead-system-config/deploy.sh \
+    --environment-name production \
+  ;
+}}}
+
+
+== Release==
+
+[] SSH into nc3pvl5
+
+[] Export environmental variables
+{{{
+#!sh
+GIT_CHECKOUT_APP="/cars/source/lead-system-binary"
+}}}
+
+[] Do an application git pull using sudo to checkout as root, and "ops" as
+   primary group and using umask to allow u=rw, g=rw permissions
+{{{sudo \
+  -H \
+  -u root \
+  -g ops \
+  GIT_CHECKOUT_APP="${GIT_CHECKOUT_APP}" \
+  -- \
+  /bin/bash \
+    -c \
+      '( \
+         date;
+         umask 0002; \
+         git \
+           --git-dir "${GIT_CHECKOUT_APP}/.git" \
+           --work-tree "${GIT_CHECKOUT_APP}" \
+           pull
+       )' \
+;
+}}}
+
+
+[] Export environmental variables
+{{{
+#!sh
+GIT_CHECKOUT_CONFIG="/cars/source/lead-system-config"
+}}}
+
+
+[] Check the status of the configuration git checkout.
+{{{
+#!sh
+sudo \
+  -u root \
+  -g ops \
+  GIT_CHECKOUT_CONFIG="${GIT_CHECKOUT_CONFIG}" \
+  -- \
+  /bin/bash \
+    -c \
+      '( \
+         date;
+         umask 0002; \
+         git \
+           --git-dir "${GIT_CHECKOUT_CONFIG}/.git" \
+           --work-tree "${GIT_CHECKOUT_CONFIG}" \
+           pull
+       )' \
+;
+}}}
+
+
+[] Release new configuration and application
+{{{
+#!sh
+"${GIT_CHECKOUT_CONFIG}/deploy.sh" \
+--environment-name production \
+;
+}}}

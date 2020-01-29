@@ -1,21 +1,26 @@
 == DNS records =
 
 [ ] 172.28.240.10  ncspral18.srv.nchub.net - 172.20.89.44  - unijob/semi/new-semi
-[ ] 172.28.240.11  ncspral20.srv.nchub.net - 172.20.89.46  - nlp admin
+[x] 172.28.240.11  ncspral20.srv.nchub.net - 172.20.89.46  - nlp admin
 [ ] 172.28.240.12  ncspral21.srv.nchub.net - 172.20.89.47  - nc inek
-[ ] 172.28.240.13  ncspral23.srv.nchub.net - 172.20.89.53  - db repl
-[ ] 172.28.240.14  ncspral24.srv.nchub.net - 172.20.89.54  - db repl
+[x] 172.28.240.13  ncspral23.srv.nchub.net - 172.20.89.53  - db repl
+[x] 172.28.240.14  ncspral24.srv.nchub.net - 172.20.89.54  - db repl
 [ ] 172.28.240.15  ncspral27.srv.nchub.net - 172.20.89.57  - leads processing
-[ ] 172.28.240.16  ncspral29.srv.nchub.net - 172.20.89.58  - bugzilla
-[x] 172.28.240.17  ncspral30.srv.nchub.net - 172.20.89.59  - migrated nagios
-[x] 172.28.240.18  ncspral31.srv.nchub.net - 172.20.89.61  - migrated pantheon
+
+[x] 172.28.240.16  ncspral29.srv.nchub.net - 172.20.89.58  - redeployed bugzilla
+[x] 172.28.240.17  ncspral30.srv.nchub.net - 172.20.89.59  - redeployed nagios
+[x] 172.28.240.18  ncspral31.srv.nchub.net - 172.20.89.61  - redeployed pantheon
+
 [ ] 172.28.240.19  ncspral32.srv.nchub.net - 172.20.89.62  - stage lead poster (php)
 [ ] 172.28.240.20  ncspral33.srv.nchub.net - 172.20.89.29  - prod lead poster (php)
-[x] 172.28.240.21  ncspral34.srv.nchub.net - 172.20.89.110 - stage new lead system (java)
-[x] 172.28.240.22  ncspral35.srv.nchub.net - 172.20.89.111 - prod new lead system (java)
-[s] 172.28.240.23  ncspral36.srv.nchub.net - 172.20.89.112 - prod new lead system (java)
+
+[ ] 172.28.240.21  ncspral34.srv.nchub.net - 172.20.89.110 - stage new lead system (java)
+[ ] 172.28.240.22  ncspral35.srv.nchub.net - 172.20.89.111 - prod new lead system (java)
+[ ] 172.28.240.23  ncspral36.srv.nchub.net - 172.20.89.112 - prod new lead system (java)
+
 [s] 172.28.240.24  ncspral37.srv.nchub.net - 172.20.89.113 - migrated snafu
 [s] 172.28.240.25  ncspral38.srv.nchub.net - 172.20.89.114 - migrated svn server
+
 [ ] 172.28.240.26  ncspral39.srv.nchub.net -
 [ ] 172.28.240.27  ncspral40.srv.nchub.net -
 [ ] 172.28.240.28  ncspral41.srv.nchub.net -
@@ -28,6 +33,7 @@
 [ ] 172.28.240.35  ncspral48.srv.nchub.net -
 [ ] 172.28.240.36  ncspral49.srv.nchub.net -
 [ ] 172.28.240.37  ncspral50.srv.nchub.net -
+
 [ ] 172.28.240.38  ncspral51.srv.nchub.net - 172.20.89.72 - stage lead poster (db)
 [ ] 172.28.240.39  ncspral61.srv.nchub.net - 172.20.89.74 - stage lead poster (stage java/php, soon php only)
 
