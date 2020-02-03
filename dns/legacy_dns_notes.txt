@@ -9,7 +9,7 @@
 
 [x] 172.28.240.16  ncspral29.srv.nchub.net - 172.20.89.58  - redeployed bugzilla
 [x] 172.28.240.17  ncspral30.srv.nchub.net - 172.20.89.59  - redeployed nagios
-[x] 172.28.240.18  ncspral31.srv.nchub.net - 172.20.89.61  - redeployed pantheon
+[x] 172.28.240.18  ncspral31.srv.nchub.net - 172.20.89.61  - redeployed mediawiki
 
 [ ] 172.28.240.19  ncspral32.srv.nchub.net - 172.20.89.62  - stage lead poster (php)
 [ ] 172.28.240.20  ncspral33.srv.nchub.net - 172.20.89.29  - prod lead poster (php)
@@ -21,7 +21,7 @@
 [s] 172.28.240.24  ncspral37.srv.nchub.net - 172.20.89.113 - migrated snafu
 [s] 172.28.240.25  ncspral38.srv.nchub.net - 172.20.89.114 - migrated svn server
 
-[ ] 172.28.240.26  ncspral39.srv.nchub.net -
+[ ] 172.28.240.26  ncspral39.srv.nchub.net -               - redeployed engineering handbook
 [ ] 172.28.240.27  ncspral40.srv.nchub.net -
 [ ] 172.28.240.28  ncspral41.srv.nchub.net -
 [ ] 172.28.240.29  ncspral42.srv.nchub.net -

@@ -1,0 +1,63 @@
+./git-mirror.sh \
+  git@github.nchub.net:cars-sm/leads-system.git \
+  git@cars-sm.github.com:cars-sm/pingpost.git \
+;
+
+./git-mirror.sh \
+  git@github.nchub.net:cars-sm/leads-system.git \
+  git@github.nchub.net:cars-sm/leads-system-binary-file-cleanup.git \
+;
+
+
+./git-mirror.sh \
+  git@github.nchub.net:cars-sm/leads-system-binary-file-cleanup.git \
+  git@cars-sm.github.com:cars-sm/pingpost.git \
+;
+
+
+git filter-branch \
+  --force \
+  --index-filter \
+  'git rm --cached --ignore-unmatch tools/prodlogs/daemonproc' \
+  --prune-empty \
+  --tag-name-filter cat -- \
+  --all \
+;
+
+
+git filter-branch \
+  --force \
+  --index-filter \
+  'git rm --cached --ignore-unmatch tools/prodlogs/daemonposter' \
+  --prune-empty \
+  --tag-name-filter cat -- \
+  --all \
+;
+
+
+git filter-branch \
+  --force \
+  --index-filter \
+  'git rm --cached --ignore-unmatch data-fixture/nlp_retail_dealers_data.sql' \
+  --prune-empty \
+  --tag-name-filter cat -- \
+  --all \
+;
+
+
+git filter-branch \
+    --force \
+    --index-filter \
+    'git rm --cached --ignore-unmatch RELEASE/pingpost.war' \
+    --prune-empty \
+    --tag-name-filter cat -- \
+    --all \
+;
+
+
+git rev-list --objects --all \
+| git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' \
+| sed -n 's/^blob //p' \
+| sort --numeric-sort --key=2 \
+| cut -c 1-12,41- \
+| $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest
