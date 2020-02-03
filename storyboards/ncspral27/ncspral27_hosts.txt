@@ -30,12 +30,25 @@ done
 }}}
 
 
-= ncspral5 =
+= ncspral5: modify =
 
 172.20.89.57  bar.newcars.com
 172.20.89.57  leaddb1.newcars.com
 
-= ncspral20 =
+= ncspral20: modify and add =
 
 172.20.89.57  leaddb1.newcars.com
 
+172.28.240.15  leads.prod.db.newcars.com
+172.28.240.15  leads.db.nchub.net
+
+
+= ncspral35: modify =
+
+172.28.240.15  leads.prod.db.newcars.com
+172.28.240.15  leads.db.nchub.net
+
+= ncspral36: modify =
+
+172.28.240.15  leads.prod.db.newcars.com
+172.28.240.15  leads.db.nchub.net
