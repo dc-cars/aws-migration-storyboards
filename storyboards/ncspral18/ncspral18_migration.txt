@@ -405,11 +405,37 @@ sudo /sbin/reboot
 
 [] Check System Log for errors
 
+== Storyboard: Update timezone ==
+[] Stop ntpd service
+{{{
+sudo systemctl stop ntpd
+}}}
 
-== Storyboard: Assign Security groups ==
+[] Edit /etc/sysconfig/clock
+change
+{{{
+UTC=false
+}}}
+to
+{{{
+UTC=true
+}}}
 
-[] TODO: ncspral18 group
+[] Run update
+{{{
+/usr/sbin/ntpdate pool.ntp.org
+}}}
 
+[] Start ntpd service again
+{{{
+sudo systemctl start ntpd
+}}}
+
+== Storyboard: Rename network interface on AWS ==
+
+[] Navigate to "Network Interfaces on EC2 section of AWS
+
+[] Rename appropriate network interface "ncspral18"
 
 == Storyboard: Delete VmWare clone ==
 
@@ -419,22 +445,16 @@ sudo /sbin/reboot
 
 [] Delete from disk ncspral18-aws-clone
 
-
-== Storyboard: Re-activate services ==
-
-[] TODO: activate services deactivated previously
-
-
-== Storyboard: BigIP Updates ==
-
-[] TODO: Update BigIP configs
-
-
 == Storyboard: DNS Updates ==
 
 [] update DNS record for ncspral18.srv.nchub.net to 172.28.240.10
 
 [] TODO: Update DNS for server
+
+
+== Storyboard: BigIP Updates ==
+
+[] TODO: Update BigIP VIPs
 
 
 == Storyboard: Host File Updates ==
@@ -444,3 +464,11 @@ sudo /sbin/reboot
 
 == Storyboard: Verify Unijob Server Health ==
 TODO
+
+== Storyboard: Update IP address of ncspral18 in Nagios ==
+
+[] Ask Michael to update the IP to 172.28.240.10
+
+== Storyboard: Re-activate services ==
+
+[] TODO: activate services deactivated previously

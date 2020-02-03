@@ -18,7 +18,7 @@ SMS migration time:
  - 6hr (guess)
 
 AWS EC2 Instance:
-- type: r4.xlarge (update to r4.2xlarge if issues arise)
+- type: r4.4xlarge
 - ENA: no (RHEL5 too old)
 
 == Storyboard: Create clone of VmWare instance ==
@@ -46,20 +46,7 @@ sudo /sbin/shutdown -h now
   - Use Newcars Hosts
   - Use data store with sufficient amount of disk
 
-[] Wait for clone task to complete and power up original vm
-
-[] Start ncspral27 vm (non clone)
-
-[] Check ncspral27 vm for correct running services
-{{{
-ps auxw | grep anacron
-ps auxw | grep atd
-ps auxw | grep crond
-ps auxw | grep mysql
-ps auxw | grep nrpe
-ps auxw | grep sendmail
-ps auxw | grep -i unijob
-}}}
+[] Wait for clone task to complete
 
 [] Disable all NIC interfaces on VmWare ncspral27-aws-clone instance
 
@@ -301,6 +288,7 @@ Volumes: checked
 {{{
 Cars-SM MySQL
 Cars-SM NRPE
+Cars-SM Ping
 Cars-SM SSH
 Cars-SM Unijob client
 }}}
@@ -339,6 +327,11 @@ ps auxw | grep sendmail
 ps auxw | grep UNIJOB
 }}}
 
+== Storyboard: Rename network interface on AWS ==
+
+[] Navigate to "Network Interfaces on EC2 section of AWS
+
+[] Rename appropriate network interface "ncspral27"
 
 == Storyboard: Updated machine networking ==
 
@@ -376,6 +369,32 @@ sudo /sbin/reboot
 [] Check that the hostname has change
 {{{
 hostname
+}}}
+
+== Storyboard: Update timezone ==
+[] Stop ntpd service
+{{{
+sudo systemctl stop ntpd
+}}}
+
+[] Edit /etc/sysconfig/clock
+change
+{{{
+UTC=false
+}}}
+to
+{{{
+UTC=true
+}}}
+
+[] Run update
+{{{
+/usr/sbin/ntpdate pool.ntp.org
+}}}
+
+[] Start ntpd service again
+{{{
+sudo systemctl start ntpd
 }}}
 
 == Storyboard: Update Nagios ==

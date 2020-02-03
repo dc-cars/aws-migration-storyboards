@@ -331,6 +331,11 @@ ps auxw | grep sendmail
 ps auxw | grep -i unijob
 }}}
 
+== Storyboard: Rename network interface on AWS ==
+
+[] Navigate to "Network Interfaces on EC2 section of AWS
+
+[] Rename appropriate network interface "ncspral21"
 
 == Storyboard: Updated machine networking ==
 
@@ -369,6 +374,31 @@ sudo /sbin/reboot
 hostname
 }}}
 
+== Storyboard: Update timezone ==
+[] Stop ntpd service
+{{{
+sudo systemctl stop ntpd
+}}}
+
+[] Edit /etc/sysconfig/clock
+change
+{{{
+UTC=false
+}}}
+to
+{{{
+UTC=true
+}}}
+
+[] Run update
+{{{
+/usr/sbin/ntpdate pool.ntp.org
+}}}
+
+[] Start ntpd service again
+{{{
+sudo systemctl start ntpd
+}}}
 
 == Storyboard: Route 53 DNS Updates ==
 
