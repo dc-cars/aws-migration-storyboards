@@ -18,7 +18,7 @@ SMS migration time:
  - 6hr (guess)
 
 AWS EC2 Instance:
-- type: r4.4xlarge
+- type: r4.4xlarge (maybe r4.8xlarge)
 - ENA: no (RHEL5 too old)
 
 == Storyboard: Create clone of VmWare instance ==

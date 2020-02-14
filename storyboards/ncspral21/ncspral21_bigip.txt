@@ -16,11 +16,6 @@ ncspral21
 
 [] Login to BigIP F5
 
-
-TODO:
-  - ask about cps db host VIP missing
-  - ask about what db name to use for check
-
 === VIP: nc.prod.db.newcars.com / Pool: newcars_nc.prod.db-1 ===
 
 [] Locate following VIP/Pool

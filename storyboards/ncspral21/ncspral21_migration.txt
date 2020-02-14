@@ -12,7 +12,7 @@ VmWare:
  * boot: 9 GB
    * swap: 7 GB
  * fio: 161 GB
- * disk1: 101 GB (TODO: check with MR)
+ * disk1: 101 GB
  * root: 60 GB
 
 SMS migration time:
@@ -81,9 +81,6 @@ sudo /sbin/reboot
 
 
 == Storyboard: Disable services ==
-TODO check:
-    memcached           0:off 1:off 2:on  3:on  4:on  5:on  6:off
-    rsyncd              0:off 1:off 2:on  3:off 4:off 5:off 6:off
 
 Note: done so two running clone do mess with the infrastructure
 
@@ -136,17 +133,12 @@ sudo /sbin/chkconfig --level 345 unijob off
 sudo /sbin/chkconfig --list unijob | grep ":on"
 }}}
 
-TODO: check
-  disable rsyncd
-  disable memcached
-
 [] Restart server
 {{{
 sudo /sbin/reboot
 }}}
 
 [] Run spot checks post reboot
-TODO: check rsyncd & memcached
 {{{
 ps auxw | grep anacron
 ps auxw | grep httpd
@@ -207,7 +199,7 @@ ncspral21-aws-clone
 9GB:   ncspral21-aws-clone-boot
 60GB:  ncspral21-aws-clone-root
 161GB: ncspral21-aws-clone-fio
-101GB: ncspral21-aws-clone-disk1 (TODO: check with MR)
+101GB: ncspral21-aws-clone-disk1
 }}}
 
 [] Navigate to AWS EC2 AMI and copy ncspral21-aws-clone AMI enter/select following values into the field
@@ -231,7 +223,7 @@ Description: ncspral21
 9GB:   ncspral21-ami-boot
 60GB:  ncspral21-ami-root
 161GB: ncspral21-ami-fio
-101GB: ncspral21-ami-disk1 (TODO: check with MR)
+101GB: ncspral21-ami-disk1
 }}}
 
 [] Navigate to AWS EC2 AMI and "Deregister" (delete) the "ncspral21-aws-clone" AMI
@@ -289,8 +281,9 @@ Volumes: checked
 }}}
 
 [] On "Step 6: Configure Security Group" click "Select an existing security group" and click "Review and Launch"
-TODO: need additional groups that allow access to multiple mysql ports on this machine
 {{{
+Cars-SM ncspral21 MySQL (3306-3308)
+Cars-SM HTTP
 Cars-SM NRPE
 Cars-SM Ping
 Cars-SM SSH
@@ -320,7 +313,6 @@ ssh \
 }}}
 
 [] Run spot checks post reboot
-TODO: check rsyncd & memcached
 {{{
 ps auxw | grep anacron
 ps auxw | grep httpd
@@ -413,7 +405,6 @@ sudo systemctl start ntpd
 
 
 == Storyboard: Re-activate services ==
-TODO: check rsyncd & memcached
 
 [] Enable anacron service
 {{{
@@ -468,3 +459,5 @@ sudo /sbin/chkconfig --list unijob
 {{{
 sudo /sbin/reboot
 }}}
+
+NOTE: CHECK W JAMES IF RSYNC JOBS FAIL

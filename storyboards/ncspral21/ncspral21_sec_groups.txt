@@ -1,8 +1,6 @@
 $ sudo netstat -plnt
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address               Foreign Address             State       PID/Program name
-tcp        0      0 0.0.0.0:11211               0.0.0.0:*                   LISTEN      30623/memcached
-tcp        0      0 :::11211                    :::*                        LISTEN      30623/memcached
 tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN      12092/mysqld
 tcp        0      0 0.0.0.0:3307                0.0.0.0:*                   LISTEN      12096/mysqld
 tcp        0      0 0.0.0.0:3308                0.0.0.0:*                   LISTEN      12100/mysqld

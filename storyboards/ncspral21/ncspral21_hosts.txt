@@ -28,3 +28,42 @@ do \
   echo ""; \
 done
 }}}
+
+[] Replace existing host IP modifications to 172.28.240.12
+
+= ncspral5 =
+
+172.20.89.47    www.newcars.com newcars.com
+172.20.89.47 www.whypaysticker.com whypaysticker.com
+
+= ncspral18 =
+
+172.20.89.47  newcars.com
+172.20.89.47  www.newcars.com
+172.20.89.47  www.whypaysticker.com
+172.20.89.47  whypaysticker.com
+
+= ncspral20 =
+
+172.20.89.47  newcars.com
+172.20.89.47  www.newcars.com
+172.20.89.47  lucy.newcars.com
+172.20.89.47  leads.newcars.com
+172.20.89.47  stage.newcars.com
+172.20.89.47  whypaysticker.com
+172.20.89.47  www.whypaysticker.com
+
+= ncspral23 =
+
+172.20.89.47  newcars.com
+172.20.89.47  www.newcars.com
+
+= ncspral27 =
+
+172.20.89.47  newcars.com
+172.20.89.47  www.newcars.com
+172.20.89.47  whypaysticker.com
+172.20.89.47  whypaysticker.com
+
+= ncspral54 =
+172.20.89.47    newcars.com www.newcars.com lucy.newcars.com stage.newcars.com
