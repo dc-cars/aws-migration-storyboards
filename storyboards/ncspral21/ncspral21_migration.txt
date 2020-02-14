@@ -16,7 +16,7 @@ VmWare:
  * root: 60 GB
 
 SMS migration time:
-- 4hr (estimate)
+- 3 hours
 
 AWS EC2 Instance:
 - type: r4.4xlarge (16 CPUs, 122 GB RAM)
