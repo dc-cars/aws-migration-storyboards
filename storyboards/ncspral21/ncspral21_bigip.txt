@@ -1,6 +1,8 @@
 ncspral21
 =========
 
+NOTE: PHARAOH_NC BIGIP CHANGES MUST BE MADE SIMULTANEOUSLY OR WE DIE
+
 == Storyboard: Update BigIP VIPs to use AWS instance ==
 
 [] Open local terminal

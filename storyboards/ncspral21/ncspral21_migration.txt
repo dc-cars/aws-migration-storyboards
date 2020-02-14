@@ -256,7 +256,7 @@ Tenancy: ??? (need to ask adam)
 
 Network interfaces:
 {{{
-Primary IP: 172.28.224.12
+Primary IP: 172.28.240.12
 }}}
 
 [] On "Step 4: Add Storage" select the following and click "Next: Add Tags"
@@ -308,7 +308,7 @@ ssh \
   -o UserKnownHostsFile=/dev/null \
   -o StrictHostKeyChecking=no \
   -o LogLevel=ERROR \
-  jlee@172.28.224.12 \
+  jlee@172.28.240.12 \
 ;
 }}}
 
@@ -351,7 +351,7 @@ remove old ip
 }}}
 add new ip
 {{{
-172.28.224.12          ncspral21.classifiedventures.com ncspral21
+172.28.240.12          ncspral21.classifiedventures.com ncspral21
 }}}
 
 [] Reboot the machine
@@ -396,7 +396,7 @@ sudo systemctl start ntpd
 
 [] Create PTR record for ncspral21
 
-[] update DNS record for ncspral21.srv.nchub.net to 172.28.224.12
+[] update DNS record for ncspral21.srv.nchub.net to 172.28.240.12
 
 
 == Storyboard: BigIP Updates ==
